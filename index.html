@@ -700,40 +700,39 @@
             </div>
             <div class="p-6 space-y-4">
                 <input type="hidden" id="resp-edit-id">
-                <div class="grid grid-cols-2 gap-4">
-                    <div><label class="block text-xs uppercase tracking-wider text-slate-400 mb-1">Prénom
-                            *</label><input type="text" id="resp-prenom"
-                            class="w-full bg-navy-800 border border-white/10 rounded-lg px-3 py-2 text-white focus:border-gold-500 outline-none">
+                <input type="hidden" id="resp-photo-data">
+                <div class="flex flex-col md:flex-row gap-5">
+                    <!-- Photo -->
+                    <div class="flex flex-col items-center gap-2 shrink-0">
+                        <label class="block text-xs uppercase tracking-wider text-slate-400">Photo</label>
+                        <div id="resp-photo-preview" onclick="document.getElementById('resp-photo-input').click()"
+                            class="w-24 h-24 bg-navy-800 border-2 border-dashed border-white/20 rounded-full flex flex-col items-center justify-center text-slate-500 cursor-pointer hover:border-gold-500 hover:text-gold-400 transition-all overflow-hidden relative">
+                            <i data-lucide="camera" class="w-7 h-7"></i>
+                            <input type="file" id="resp-photo-input" accept="image/*" class="hidden" onchange="window.handleRespPhoto(this)">
+                        </div>
+                        <span class="text-[0.6rem] text-slate-500">Cliquer pour ajouter</span>
                     </div>
-                    <div><label class="block text-xs uppercase tracking-wider text-slate-400 mb-1">Nom *</label><input
-                            type="text" id="resp-nom"
-                            class="w-full bg-navy-800 border border-white/10 rounded-lg px-3 py-2 text-white focus:border-gold-500 outline-none">
+                    <!-- Fields -->
+                    <div class="flex-1 space-y-3">
+                        <div class="grid grid-cols-2 gap-3">
+                            <div><label class="block text-xs uppercase tracking-wider text-slate-400 mb-1">Prénom *</label><input type="text" id="resp-prenom" class="w-full bg-navy-800 border border-white/10 rounded-lg px-3 py-2 text-white focus:border-gold-500 outline-none"></div>
+                            <div><label class="block text-xs uppercase tracking-wider text-slate-400 mb-1">Nom *</label><input type="text" id="resp-nom" class="w-full bg-navy-800 border border-white/10 rounded-lg px-3 py-2 text-white focus:border-gold-500 outline-none"></div>
+                        </div>
+                        <div><label class="block text-xs uppercase tracking-wider text-slate-400 mb-1">Équipe / Groupe</label><input type="text" id="resp-equipe" placeholder="ex: Catéchèse" class="w-full bg-navy-800 border border-white/10 rounded-lg px-3 py-2 text-white focus:border-gold-500 outline-none"></div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div><label class="block text-xs uppercase tracking-wider text-slate-400 mb-1">Téléphone</label><input type="tel" id="resp-tel" class="w-full bg-navy-800 border border-white/10 rounded-lg px-3 py-2 text-white focus:border-gold-500 outline-none"></div>
+                            <div><label class="block text-xs uppercase tracking-wider text-slate-400 mb-1">Email</label><input type="email" id="resp-email" class="w-full bg-navy-800 border border-white/10 rounded-lg px-3 py-2 text-white focus:border-gold-500 outline-none"></div>
+                        </div>
+                        <div>
+                            <label class="block text-xs uppercase tracking-wider text-slate-400 mb-1">Accès</label>
+                            <select id="resp-acces" class="w-full bg-navy-800 border border-white/10 rounded-lg px-3 py-2 text-white focus:border-gold-500 outline-none appearance-none">
+                                <option value="both">Portillon + Grand portail</option>
+                                <option value="portillon">Portillon uniquement</option>
+                                <option value="portail">Grand portail uniquement</option>
+                                <option value="none">Aucun accès</option>
+                            </select>
+                        </div>
                     </div>
-                </div>
-                <div><label class="block text-xs uppercase tracking-wider text-slate-400 mb-1">Équipe /
-                        Groupe</label><input type="text" id="resp-equipe" placeholder="ex: Catéchèse"
-                        class="w-full bg-navy-800 border border-white/10 rounded-lg px-3 py-2 text-white focus:border-gold-500 outline-none">
-                </div>
-                <div class="grid grid-cols-2 gap-4">
-                    <div><label
-                            class="block text-xs uppercase tracking-wider text-slate-400 mb-1">Téléphone</label><input
-                            type="tel" id="resp-tel"
-                            class="w-full bg-navy-800 border border-white/10 rounded-lg px-3 py-2 text-white focus:border-gold-500 outline-none">
-                    </div>
-                    <div><label class="block text-xs uppercase tracking-wider text-slate-400 mb-1">Email</label><input
-                            type="email" id="resp-email"
-                            class="w-full bg-navy-800 border border-white/10 rounded-lg px-3 py-2 text-white focus:border-gold-500 outline-none">
-                    </div>
-                </div>
-                <div>
-                    <label class="block text-xs uppercase tracking-wider text-slate-400 mb-1">Accès</label>
-                    <select id="resp-acces"
-                        class="w-full bg-navy-800 border border-white/10 rounded-lg px-3 py-2 text-white focus:border-gold-500 outline-none appearance-none">
-                        <option value="both">Portillon + Grand portail</option>
-                        <option value="portillon">Portillon uniquement</option>
-                        <option value="portail">Grand portail uniquement</option>
-                        <option value="none">Aucun accès</option>
-                    </select>
                 </div>
             </div>
             <div class="p-5 border-t border-white/10 flex justify-end gap-3 bg-navy-900/50">
@@ -1147,11 +1146,39 @@
         };
 
         window.openModal = (id) => {
-            if (id === 'modal-resp') { document.getElementById('resp-edit-id').value = '';['resp-prenom', 'resp-nom', 'resp-equipe', 'resp-tel', 'resp-email'].forEach(f => document.getElementById(f).value = ''); document.getElementById('resp-acces').value = 'both'; }
-            if (id === 'modal-activity') { document.getElementById('act-edit-id').value = '';['act-nom', 'act-desc', 'act-start', 'act-end'].forEach(f => document.getElementById(f).value = ''); document.getElementById('act-date').value = new Date().toISOString().split('T')[0]; document.getElementById('act-recurrence').value = 'weekly'; window.selectedDays = []; window.toggleRecurrence(); fillSelects(); }
-            if (id === 'modal-vehicle') { document.getElementById('veh-edit-id').value = '';['veh-prenom', 'veh-nom', 'veh-immat', 'veh-tel', 'veh-email', 'veh-photo-data'].forEach(f => document.getElementById(f).value = ''); document.getElementById('veh-photo-preview').innerHTML = '<i data-lucide="camera" class="w-10 h-10 mb-2"></i><span class="text-xs text-center px-4">Cliquer pour ajouter</span>'; fillSelects(); lucide.createIcons(); }
-            if (id === 'modal-acces') { const n = new Date(); document.getElementById('acces-date').value = n.toISOString().split('T')[0]; document.getElementById('acces-heure').value = n.toTimeString().slice(0, 5); fillSelects(); }
-            document.getElementById(id).classList.remove('hidden'); document.getElementById(id).classList.add('flex');
+            if (id === 'modal-resp') {
+                document.getElementById('resp-edit-id').value = '';
+                ['resp-prenom', 'resp-nom', 'resp-equipe', 'resp-tel', 'resp-email'].forEach(f => document.getElementById(f).value = '');
+                document.getElementById('resp-acces').value = 'both';
+                document.getElementById('resp-photo-data').value = '';
+                document.getElementById('resp-photo-preview').innerHTML = '<i data-lucide="camera" class="w-7 h-7"></i><input type="file" id="resp-photo-input" accept="image/*" class="hidden" onchange="window.handleRespPhoto(this)">';
+                document.getElementById('modal-resp-title').innerText = 'Ajouter Responsable';
+            }
+            if (id === 'modal-activity') {
+                document.getElementById('act-edit-id').value = '';
+                ['act-nom', 'act-desc', 'act-start', 'act-end'].forEach(f => document.getElementById(f).value = '');
+                document.getElementById('act-date').value = new Date().toISOString().split('T')[0];
+                document.getElementById('act-recurrence').value = 'weekly';
+                window.selectedDays = []; window.toggleRecurrence(); fillSelects();
+            }
+            if (id === 'modal-vehicle') {
+                document.getElementById('veh-edit-id').value = '';
+                ['veh-prenom', 'veh-nom', 'veh-immat', 'veh-tel', 'veh-email', 'veh-photo-data'].forEach(f => document.getElementById(f).value = '');
+                document.getElementById('veh-type').value = 'voiture';
+                document.getElementById('veh-photo-preview').innerHTML = '<i data-lucide="camera" class="w-10 h-10 mb-2"></i><span class="text-xs text-center px-4">Cliquer pour ajouter</span><input type="file" id="veh-photo-input" accept="image/*" class="hidden" onchange="window.handlePhotoUpload(this)">';
+                document.getElementById('modal-veh-title').innerText = 'Nouveau Véhicule';
+                fillSelects();
+            }
+            if (id === 'modal-acces') {
+                const n = new Date();
+                document.getElementById('acces-date').value = n.toISOString().split('T')[0];
+                document.getElementById('acces-heure').value = n.toTimeString().slice(0, 5);
+                document.getElementById('acces-note').value = '';
+                fillSelects();
+            }
+            document.getElementById(id).classList.remove('hidden');
+            document.getElementById(id).classList.add('flex');
+            lucide.createIcons();
         };
         window.closeModal = (id) => { document.getElementById(id).classList.add('hidden'); document.getElementById(id).classList.remove('flex'); };
 
@@ -1173,18 +1200,74 @@
             dbSet('log', id, { id, msg, time: new Date().toISOString() });
         }
 
+        // PHOTO HELPERS
+        function compressAndStore(input, previewId, dataId, shape = 'square') {
+            const file = input.files[0]; if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = new Image(); img.src = e.target.result;
+                img.onload = () => {
+                    const cvs = document.createElement('canvas'); const MAX = 400;
+                    let w = img.width, h = img.height;
+                    if (w > h) { if (w > MAX) { h = h * MAX / w; w = MAX; } }
+                    else { if (h > MAX) { w = w * MAX / h; h = MAX; } }
+                    cvs.width = w; cvs.height = h;
+                    cvs.getContext('2d').drawImage(img, 0, 0, w, h);
+                    const dataUrl = cvs.toDataURL('image/jpeg', 0.75);
+                    document.getElementById(dataId).value = dataUrl;
+                    const pp = document.getElementById(previewId);
+                    const inputId = dataId.replace('-data', '-input');
+                    const rounded = shape === 'circle' ? 'rounded-full' : 'rounded-xl';
+                    pp.innerHTML = `<img src="${dataUrl}" class="w-full h-full object-cover ${rounded}"><input type="file" id="${inputId}" accept="image/*" class="hidden" onchange="window.handlePhotoUpload(this)">`;
+                    if (shape === 'circle') {
+                        pp.querySelector('input').setAttribute('onchange', `window.handleRespPhoto(this)`);
+                    }
+                };
+            };
+            reader.readAsDataURL(file);
+        }
+
+        window.handlePhotoUpload = (input) => compressAndStore(input, 'veh-photo-preview', 'veh-photo-data', 'square');
+        window.handleRespPhoto = (input) => compressAndStore(input, 'resp-photo-preview', 'resp-photo-data', 'circle');
+
         // RESPONSABLES
         window.saveResp = async () => {
-            const p = document.getElementById('resp-prenom').value, n = document.getElementById('resp-nom').value;
+            const p = document.getElementById('resp-prenom').value.trim();
+            const n = document.getElementById('resp-nom').value.trim();
             if (!p || !n) return window.toast('Prénom/Nom requis', 'error');
             const id = document.getElementById('resp-edit-id').value || window.uid();
-            await dbSet('responsables', id, { id, prenom: p, nom: n, equipe: document.getElementById('resp-equipe').value, tel: document.getElementById('resp-tel').value, email: document.getElementById('resp-email').value, acces: document.getElementById('resp-acces').value });
+            await dbSet('responsables', id, {
+                id, prenom: p, nom: n,
+                equipe: document.getElementById('resp-equipe').value,
+                tel: document.getElementById('resp-tel').value,
+                email: document.getElementById('resp-email').value,
+                acces: document.getElementById('resp-acces').value,
+                photo: document.getElementById('resp-photo-data').value || null
+            });
             window.closeModal('modal-resp'); window.toast('Responsable enregistré'); addLog(`👤 ${p} ${n} enregistré`);
         };
         window.editResp = (id) => {
             const r = window.state.responsables.find(x => x.id === id); if (!r) return;
-            document.getElementById('resp-edit-id').value = r.id; document.getElementById('resp-prenom').value = r.prenom; document.getElementById('resp-nom').value = r.nom; document.getElementById('resp-equipe').value = r.equipe || ''; document.getElementById('resp-tel').value = r.tel || ''; document.getElementById('resp-email').value = r.email || ''; document.getElementById('resp-acces').value = r.acces || 'both';
-            window.openModal('modal-resp'); document.getElementById('modal-resp-title').innerText = 'Modifier Responsable';
+            document.getElementById('resp-edit-id').value = r.id;
+            document.getElementById('resp-prenom').value = r.prenom;
+            document.getElementById('resp-nom').value = r.nom;
+            document.getElementById('resp-equipe').value = r.equipe || '';
+            document.getElementById('resp-tel').value = r.tel || '';
+            document.getElementById('resp-email').value = r.email || '';
+            document.getElementById('resp-acces').value = r.acces || 'both';
+            document.getElementById('resp-photo-data').value = r.photo || '';
+            // Photo preview
+            const pp = document.getElementById('resp-photo-preview');
+            if (r.photo) {
+                pp.innerHTML = `<img src="${r.photo}" class="w-full h-full object-cover rounded-full"><input type="file" id="resp-photo-input" accept="image/*" class="hidden" onchange="window.handleRespPhoto(this)">`;
+            } else {
+                pp.innerHTML = '<i data-lucide="camera" class="w-7 h-7"></i><input type="file" id="resp-photo-input" accept="image/*" class="hidden" onchange="window.handleRespPhoto(this)">';
+            }
+            document.getElementById('modal-resp-title').innerText = 'Modifier Responsable';
+            // Show modal directly without reset
+            document.getElementById('modal-resp').classList.remove('hidden');
+            document.getElementById('modal-resp').classList.add('flex');
+            lucide.createIcons();
         };
         window.delResp = (id) => { if (confirm('Supprimer ?')) { dbDel('responsables', id); window.toast('Supprimé'); } };
         window.filterResp = (v) => renderResp(v);
@@ -1200,7 +1283,9 @@
             tb.innerHTML = list.map(r => `
       <tr class="hover:bg-white/5 transition-all group">
         <td class="px-6 py-4 flex items-center gap-3">
-          <div class="w-8 h-8 rounded-full bg-gradient-to-br from-navy-600 to-navy-800 flex items-center justify-center font-bold text-gold-400 border border-gold-border shadow-md">${r.prenom[0]}${r.nom[0]}</div>
+          <div class="w-9 h-9 rounded-full bg-gradient-to-br from-navy-600 to-navy-800 flex items-center justify-center font-bold text-gold-400 border border-gold-border shadow-md overflow-hidden shrink-0">
+            ${r.photo ? `<img src="${r.photo}" class="w-full h-full object-cover">` : `${r.prenom[0]}${r.nom[0]}`}
+          </div>
           <div class="font-medium text-white group-hover:text-gold-400 transition-colors">${r.prenom} ${r.nom}</div>
         </td>
         <td class="px-6 py-4 text-slate-300">${r.equipe ? `<span class="px-2 py-1 rounded-md bg-white/5 border border-white/10 text-xs">${r.equipe}</span>` : '-'}</td>
@@ -1335,23 +1420,6 @@
         }
 
         // VEHICULES
-        window.handlePhotoUpload = (input) => {
-            const file = input.files[0]; if (!file) return;
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                const img = new Image(); img.src = e.target.result;
-                img.onload = () => {
-                    // Compression
-                    const cvs = document.createElement('canvas'); const MAX = 400;
-                    let w = img.width, h = img.height;
-                    if (w > h) { if (w > MAX) { h *= MAX / w; w = MAX; } } else { if (h > MAX) { w *= MAX / h; h = MAX; } }
-                    cvs.width = w; cvs.height = h; const ctx = cvs.getContext('2d'); ctx.drawImage(img, 0, 0, w, h);
-                    const dataUrl = cvs.toDataURL('image/jpeg', 0.7);
-                    document.getElementById('veh-photo-data').value = dataUrl;
-                    document.getElementById('veh-photo-preview').innerHTML = `<img src="${dataUrl}" class="w-full h-full object-cover rounded-xl"><input type="file" id="veh-photo-input" accept="image/*" class="hidden" onchange="window.handlePhotoUpload(this)">`;
-                }
-            }; reader.readAsDataURL(file);
-        };
 
         window.saveVehicle = async () => {
             const p = document.getElementById('veh-prenom').value, n = document.getElementById('veh-nom').value, imm = document.getElementById('veh-immat').value.toUpperCase();
@@ -1363,11 +1431,29 @@
         window.delVeh = (id) => { if (confirm('Supprimer véhicule ?')) dbDel('vehicles', id); };
         window.editVeh = (id) => {
             const v = window.state.vehicles.find(x => x.id === id); if (!v) return;
-            document.getElementById('veh-edit-id').value = id; document.getElementById('veh-prenom').value = v.prenom; document.getElementById('veh-nom').value = v.nom; document.getElementById('veh-immat').value = v.immat; document.getElementById('veh-type').value = v.type || 'voiture'; document.getElementById('veh-tel').value = v.tel || ''; document.getElementById('veh-email').value = v.email || ''; document.getElementById('veh-resp').value = v.resp || ''; document.getElementById('veh-photo-data').value = v.photo || '';
+            // Populate fields first
+            document.getElementById('veh-edit-id').value = id;
+            document.getElementById('veh-prenom').value = v.prenom || '';
+            document.getElementById('veh-nom').value = v.nom || '';
+            document.getElementById('veh-immat').value = v.immat || '';
+            document.getElementById('veh-type').value = v.type || 'voiture';
+            document.getElementById('veh-tel').value = v.tel || '';
+            document.getElementById('veh-email').value = v.email || '';
+            document.getElementById('veh-photo-data').value = v.photo || '';
+            fillSelects();
+            document.getElementById('veh-resp').value = v.resp || '';
+            // Photo preview
             const pp = document.getElementById('veh-photo-preview');
-            if (v.photo) pp.innerHTML = `<img src="${v.photo}" class="w-full h-full object-cover rounded-xl"><input type="file" id="veh-photo-input" accept="image/*" class="hidden" onchange="window.handlePhotoUpload(this)">`;
-            else pp.innerHTML = '<i data-lucide="camera" class="w-10 h-10 mb-2"></i><span class="text-xs text-center px-4">Cliquer pour ajouter</span><input type="file" id="veh-photo-input" accept="image/*" class="hidden" onchange="window.handlePhotoUpload(this)">';
-            window.openModal('modal-vehicle'); lucide.createIcons();
+            if (v.photo) {
+                pp.innerHTML = `<img src="${v.photo}" class="w-full h-full object-cover rounded-xl"><input type="file" id="veh-photo-input" accept="image/*" class="hidden" onchange="window.handlePhotoUpload(this)">`;
+            } else {
+                pp.innerHTML = '<i data-lucide="camera" class="w-10 h-10 mb-2"></i><span class="text-xs text-center px-4">Cliquer pour changer</span><input type="file" id="veh-photo-input" accept="image/*" class="hidden" onchange="window.handlePhotoUpload(this)">';
+            }
+            document.getElementById('modal-veh-title').innerText = 'Modifier Véhicule';
+            // Show modal directly (without reset)
+            document.getElementById('modal-vehicle').classList.remove('hidden');
+            document.getElementById('modal-vehicle').classList.add('flex');
+            lucide.createIcons();
         };
         window.filterVehicules = (v) => renderVehicles(v);
 
