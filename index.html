@@ -1000,22 +1000,20 @@
         import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, onSnapshot, doc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Configuration (À remplacer par votre config Firebase sur votre VPS)
-        const firebaseConfig = typeof __firebase_config !== 'undefined'
-            ? JSON.parse(__firebase_config)
-            : {
-                apiKey: "AIzaSyAA1bjOxeWua1EAl7HFOsSa5J0n00zx2Ec",
-                authDomain: "parking-jean23.firebaseapp.com",
-                projectId: "parking-jean23",
-                storageBucket: "parking-jean23.firebasestorage.app",
-                messagingSenderId: "427704163768",
-                appId: "1:427704163768:web:7df8e96285483381d4034d"
-            };
+        // Configuration Firebase — Centre Saint Jean XXIII
+        const firebaseConfig = {
+            apiKey: "AIzaSyAA1bjOxeWua1EAl7HFOSSa5JOn00zx2Ec",
+            authDomain: "parking-jean23.firebaseapp.com",
+            projectId: "parking-jean23",
+            storageBucket: "parking-jean23.firebasestorage.app",
+            messagingSenderId: "427704163768",
+            appId: "1:427704163768:web:7df8e96285483381d4034d"
+        };
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const appId = 'parking-jean23';
         const provider = new GoogleAuthProvider();
 
         // State
