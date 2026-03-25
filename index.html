@@ -965,6 +965,113 @@
         </div>
     </div>
 
+    <!-- Modal Détail Responsable -->
+    <div id="modal-view-resp" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/70 backdrop-blur-sm px-4">
+        <div class="glass-card w-full max-w-md rounded-2xl shadow-2xl overflow-hidden">
+            <div class="relative">
+                <!-- Banner -->
+                <div class="h-24 bg-gradient-to-r from-navy-700 to-navy-800 border-b border-white/5"></div>
+                <button onclick="window.closeModal('modal-view-resp')" class="absolute top-3 right-3 text-slate-400 hover:text-white bg-black/30 p-1.5 rounded-lg"><i data-lucide="x" class="w-4 h-4"></i></button>
+                <!-- Avatar -->
+                <div class="absolute left-6 -bottom-10">
+                    <div id="vr-avatar" class="w-20 h-20 rounded-full border-4 border-navy-900 bg-navy-800 flex items-center justify-center text-2xl font-bold text-gold-400 overflow-hidden shadow-xl"></div>
+                </div>
+            </div>
+            <div class="pt-14 px-6 pb-6">
+                <div class="flex items-start justify-between">
+                    <div>
+                        <h3 id="vr-name" class="font-serif text-2xl text-white font-bold"></h3>
+                        <div id="vr-equipe" class="text-sm text-gold-400 mt-0.5"></div>
+                    </div>
+                    <div id="vr-acces-badge" class="mt-1"></div>
+                </div>
+                <div class="mt-5 space-y-3 border-t border-white/5 pt-4">
+                    <div class="flex items-center gap-3 text-sm" id="vr-tel-row">
+                        <div class="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-slate-400 shrink-0"><i data-lucide="phone" class="w-4 h-4"></i></div>
+                        <span id="vr-tel" class="text-slate-300"></span>
+                    </div>
+                    <div class="flex items-center gap-3 text-sm" id="vr-email-row">
+                        <div class="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-slate-400 shrink-0"><i data-lucide="at-sign" class="w-4 h-4"></i></div>
+                        <span id="vr-email" class="text-slate-300 break-all"></span>
+                    </div>
+                </div>
+                <div class="mt-5 flex gap-3">
+                    <a id="vr-wa-btn" href="#" target="_blank"
+                        class="flex-1 flex items-center justify-center gap-2 bg-[#25D366]/20 hover:bg-[#25D366]/30 border border-[#25D366]/40 text-[#25D366] px-4 py-2.5 rounded-xl text-sm font-medium transition-all">
+                        <i data-lucide="message-circle" class="w-4 h-4"></i> WhatsApp
+                    </a>
+                    <a id="vr-email-btn" href="#"
+                        class="flex-1 flex items-center justify-center gap-2 bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/30 text-blue-400 px-4 py-2.5 rounded-xl text-sm font-medium transition-all">
+                        <i data-lucide="mail" class="w-4 h-4"></i> Email
+                    </a>
+                    <button id="vr-edit-btn" onclick=""
+                        class="px-4 py-2.5 rounded-xl bg-gold-500/20 border border-gold-border text-gold-400 hover:bg-gold-500/30 text-sm font-medium transition-all">
+                        <i data-lucide="pencil" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Détail Véhicule -->
+    <div id="modal-view-veh" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/70 backdrop-blur-sm px-4">
+        <div class="glass-card w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden">
+            <div class="flex items-center justify-between p-5 border-b border-white/5 bg-navy-900/50">
+                <h3 id="vv-immat" class="font-mono text-2xl text-gold-400 font-bold tracking-wider"></h3>
+                <button onclick="window.closeModal('modal-view-veh')" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <div class="p-6">
+                <div class="flex gap-5 mb-5">
+                    <!-- Photo grande -->
+                    <div id="vv-photo" class="w-28 h-28 rounded-2xl bg-navy-800 border border-white/10 overflow-hidden flex items-center justify-center text-slate-500 shrink-0 cursor-pointer" onclick="window.expandPhoto(this)">
+                    </div>
+                    <div class="flex-1 space-y-1.5">
+                        <div class="text-lg font-semibold text-white" id="vv-name"></div>
+                        <div class="text-sm text-slate-400" id="vv-type"></div>
+                        <div class="text-sm text-slate-300 flex items-center gap-1.5"><i data-lucide="phone" class="w-3.5 h-3.5 text-slate-500"></i><span id="vv-tel"></span></div>
+                        <div class="text-sm text-slate-300 flex items-center gap-1.5 break-all"><i data-lucide="at-sign" class="w-3.5 h-3.5 text-slate-500"></i><span id="vv-email"></span></div>
+                        <div class="text-xs text-slate-500 flex items-center gap-1.5 pt-1"><i data-lucide="calendar" class="w-3 h-3"></i><span id="vv-date"></span></div>
+                    </div>
+                </div>
+                <!-- Responsable lié -->
+                <div id="vv-resp-section" class="bg-navy-800/60 border border-white/5 rounded-xl p-4 mb-4 hidden">
+                    <div class="text-xs uppercase tracking-widest text-slate-500 mb-3">Responsable lié</div>
+                    <div class="flex items-center gap-3">
+                        <div id="vv-resp-avatar" class="w-10 h-10 rounded-full bg-navy-700 border border-gold-border overflow-hidden flex items-center justify-center text-gold-400 font-bold shrink-0"></div>
+                        <div class="flex-1 min-w-0">
+                            <div id="vv-resp-name" class="font-medium text-white text-sm"></div>
+                            <div id="vv-resp-equipe" class="text-xs text-slate-400"></div>
+                        </div>
+                        <div class="flex gap-2">
+                            <a id="vv-resp-wa" href="#" target="_blank" class="p-2 text-[#25D366] hover:bg-[#25D366]/20 rounded-lg" title="WhatsApp"><i data-lucide="message-circle" class="w-4 h-4"></i></a>
+                            <a id="vv-resp-email" href="#" class="p-2 text-blue-400 hover:bg-blue-500/20 rounded-lg" title="Email"><i data-lucide="mail" class="w-4 h-4"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Actions -->
+                <div class="flex gap-3">
+                    <a id="vv-wa-btn" href="#" target="_blank"
+                        class="flex-1 flex items-center justify-center gap-2 bg-[#25D366]/20 hover:bg-[#25D366]/30 border border-[#25D366]/40 text-[#25D366] px-4 py-2.5 rounded-xl text-sm font-medium transition-all">
+                        <i data-lucide="message-circle" class="w-4 h-4"></i> WhatsApp
+                    </a>
+                    <a id="vv-email-btn" href="#"
+                        class="flex-1 flex items-center justify-center gap-2 bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/30 text-blue-400 px-4 py-2.5 rounded-xl text-sm font-medium transition-all">
+                        <i data-lucide="mail" class="w-4 h-4"></i> Email
+                    </a>
+                    <button id="vv-edit-btn"
+                        class="px-4 py-2.5 rounded-xl bg-gold-500/20 border border-gold-border text-gold-400 hover:bg-gold-500/30 text-sm font-medium transition-all">
+                        <i data-lucide="pencil" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Photo lightbox -->
+    <div id="photo-lightbox" class="fixed inset-0 z-[200] hidden items-center justify-center bg-black/90 backdrop-blur-md" onclick="this.classList.add('hidden');this.classList.remove('flex')">
+        <img id="lightbox-img" src="" class="max-w-[90vw] max-h-[90vh] rounded-2xl shadow-2xl object-contain">
+    </div>
+
     <!-- Toast Container -->
     <div id="toast-container" class="fixed bottom-6 right-6 z-[100] flex flex-col gap-3"></div>
 
@@ -1272,6 +1379,89 @@
         window.delResp = (id) => { if (confirm('Supprimer ?')) { dbDel('responsables', id); window.toast('Supprimé'); } };
         window.filterResp = (v) => renderResp(v);
 
+        window.viewResp = (id) => {
+            const r = window.state.responsables.find(x => x.id === id); if (!r) return;
+            const accBadge = { both: '<span class="px-2 py-1 rounded bg-green-500/20 text-green-400 text-xs border border-green-500/30">Tous portails</span>', portail: '<span class="px-2 py-1 rounded bg-blue-500/20 text-blue-400 text-xs border border-blue-500/30">Grand portail</span>', portillon: '<span class="px-2 py-1 rounded bg-gold-500/20 text-gold-400 text-xs border border-gold-border">Portillon</span>', none: '<span class="px-2 py-1 rounded bg-slate-500/20 text-slate-400 text-xs">Aucun accès</span>' };
+            const av = document.getElementById('vr-avatar');
+            av.innerHTML = r.photo ? `<img src="${r.photo}" class="w-full h-full object-cover">` : `${r.prenom[0]}${r.nom[0]}`;
+            document.getElementById('vr-name').innerText = r.prenom + ' ' + r.nom;
+            document.getElementById('vr-equipe').innerText = r.equipe || '';
+            document.getElementById('vr-acces-badge').innerHTML = accBadge[r.acces] || accBadge.both;
+            document.getElementById('vr-tel').innerText = r.tel || 'Non renseigné';
+            document.getElementById('vr-email').innerText = r.email || 'Non renseigné';
+            document.getElementById('vr-tel-row').style.opacity = r.tel ? '1' : '0.4';
+            document.getElementById('vr-email-row').style.opacity = r.email ? '1' : '0.4';
+            const waBtn = document.getElementById('vr-wa-btn');
+            const emailBtn = document.getElementById('vr-email-btn');
+            waBtn.href = r.tel ? `https://wa.me/${r.tel.replace(/\D/g,'')}` : '#';
+            waBtn.style.opacity = r.tel ? '1' : '0.4';
+            waBtn.style.pointerEvents = r.tel ? '' : 'none';
+            emailBtn.href = r.email ? `mailto:${r.email}` : '#';
+            emailBtn.style.opacity = r.email ? '1' : '0.4';
+            emailBtn.style.pointerEvents = r.email ? '' : 'none';
+            document.getElementById('vr-edit-btn').onclick = () => { window.closeModal('modal-view-resp'); window.editResp(id); };
+            document.getElementById('modal-view-resp').classList.remove('hidden');
+            document.getElementById('modal-view-resp').classList.add('flex');
+            lucide.createIcons();
+        };
+
+        window.viewVeh = (id) => {
+            const v = window.state.vehicles.find(x => x.id === id); if (!v) return;
+            const r = v.resp ? window.state.responsables.find(x => x.id === v.resp) : null;
+            const typeLabel = { voiture: '🚗 Voiture', moto: '🏍 Moto / Scooter', camionnette: '🚐 Camionnette' };
+            document.getElementById('vv-immat').innerText = v.immat;
+            document.getElementById('vv-name').innerText = v.prenom + ' ' + v.nom;
+            document.getElementById('vv-type').innerText = typeLabel[v.type] || v.type;
+            document.getElementById('vv-tel').innerText = v.tel || '—';
+            document.getElementById('vv-email').innerText = v.email || '—';
+            document.getElementById('vv-date').innerText = v.date ? 'Autorisé depuis le ' + new Date(v.date).toLocaleDateString('fr-FR') : '';
+            // Photo
+            const ph = document.getElementById('vv-photo');
+            if (v.photo) {
+                ph.innerHTML = `<img src="${v.photo}" class="w-full h-full object-cover">`;
+                ph.title = 'Cliquer pour agrandir';
+                ph.setAttribute('data-src', v.photo);
+            } else {
+                ph.innerHTML = `<i data-lucide="${v.type === 'moto' ? 'bike' : v.type === 'camionnette' ? 'truck' : 'car'}" class="w-10 h-10"></i>`;
+                ph.removeAttribute('data-src');
+            }
+            // Actions
+            const waBtn = document.getElementById('vv-wa-btn');
+            const emailBtn = document.getElementById('vv-email-btn');
+            waBtn.href = v.tel ? `https://wa.me/${v.tel.replace(/\D/g,'')}` : '#';
+            waBtn.style.opacity = v.tel ? '1' : '0.4'; waBtn.style.pointerEvents = v.tel ? '' : 'none';
+            emailBtn.href = v.email ? `mailto:${v.email}` : '#';
+            emailBtn.style.opacity = v.email ? '1' : '0.4'; emailBtn.style.pointerEvents = v.email ? '' : 'none';
+            document.getElementById('vv-edit-btn').onclick = () => { window.closeModal('modal-view-veh'); window.editVeh(id); };
+            // Responsable lié
+            const respSection = document.getElementById('vv-resp-section');
+            if (r) {
+                respSection.classList.remove('hidden');
+                const rav = document.getElementById('vv-resp-avatar');
+                rav.innerHTML = r.photo ? `<img src="${r.photo}" class="w-full h-full object-cover">` : `${r.prenom[0]}${r.nom[0]}`;
+                document.getElementById('vv-resp-name').innerText = r.prenom + ' ' + r.nom;
+                document.getElementById('vv-resp-equipe').innerText = r.equipe || '';
+                document.getElementById('vv-resp-wa').href = r.tel ? `https://wa.me/${r.tel.replace(/\D/g,'')}` : '#';
+                document.getElementById('vv-resp-wa').style.opacity = r.tel ? '1' : '0.4';
+                document.getElementById('vv-resp-wa').style.pointerEvents = r.tel ? '' : 'none';
+                document.getElementById('vv-resp-email').href = r.email ? `mailto:${r.email}` : '#';
+                document.getElementById('vv-resp-email').style.opacity = r.email ? '1' : '0.4';
+                document.getElementById('vv-resp-email').style.pointerEvents = r.email ? '' : 'none';
+            } else {
+                respSection.classList.add('hidden');
+            }
+            document.getElementById('modal-view-veh').classList.remove('hidden');
+            document.getElementById('modal-view-veh').classList.add('flex');
+            lucide.createIcons();
+        };
+
+        window.expandPhoto = (el) => {
+            const src = el.getAttribute('data-src'); if (!src) return;
+            document.getElementById('lightbox-img').src = src;
+            const lb = document.getElementById('photo-lightbox');
+            lb.classList.remove('hidden'); lb.classList.add('flex');
+        };
+
         function renderResp(filter = '') {
             const tb = document.getElementById('resp-tbody');
             let list = window.state.responsables;
@@ -1282,18 +1472,24 @@
 
             tb.innerHTML = list.map(r => `
       <tr class="hover:bg-white/5 transition-all group">
-        <td class="px-6 py-4 flex items-center gap-3">
-          <div class="w-9 h-9 rounded-full bg-gradient-to-br from-navy-600 to-navy-800 flex items-center justify-center font-bold text-gold-400 border border-gold-border shadow-md overflow-hidden shrink-0">
-            ${r.photo ? `<img src="${r.photo}" class="w-full h-full object-cover">` : `${r.prenom[0]}${r.nom[0]}`}
+        <td class="px-6 py-4">
+          <div class="flex items-center gap-3 cursor-pointer" onclick="window.viewResp('${r.id}')">
+            <div class="w-9 h-9 rounded-full bg-gradient-to-br from-navy-600 to-navy-800 flex items-center justify-center font-bold text-gold-400 border border-gold-border shadow-md overflow-hidden shrink-0">
+              ${r.photo ? `<img src="${r.photo}" class="w-full h-full object-cover">` : `${r.prenom[0]}${r.nom[0]}`}
+            </div>
+            <div class="font-medium text-white group-hover:text-gold-400 transition-colors hover:underline">${r.prenom} ${r.nom}</div>
           </div>
-          <div class="font-medium text-white group-hover:text-gold-400 transition-colors">${r.prenom} ${r.nom}</div>
         </td>
         <td class="px-6 py-4 text-slate-300">${r.equipe ? `<span class="px-2 py-1 rounded-md bg-white/5 border border-white/10 text-xs">${r.equipe}</span>` : '-'}</td>
         <td class="px-6 py-4 text-slate-400 text-xs">${r.tel || '-'}<br>${r.email || ''}</td>
         <td class="px-6 py-4">${accBadge[r.acces] || accBadge.both}</td>
         <td class="px-6 py-4 text-right">
-          <button onclick="window.editResp('${r.id}')" class="p-1.5 text-slate-400 hover:text-white bg-white/5 hover:bg-white/10 rounded-md"><i data-lucide="pencil" class="w-4 h-4"></i></button>
-          <button onclick="window.delResp('${r.id}')" class="p-1.5 text-red-400 hover:text-white bg-red-500/10 hover:bg-red-500/30 rounded-md ml-1"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+          <div class="flex items-center justify-end gap-1">
+            ${r.tel ? `<a href="https://wa.me/${r.tel.replace(/\D/g,'')}" target="_blank" class="p-1.5 text-[#25D366] hover:bg-[#25D366]/20 rounded-md" title="WhatsApp"><i data-lucide="message-circle" class="w-4 h-4"></i></a>` : ''}
+            ${r.email ? `<a href="mailto:${r.email}" class="p-1.5 text-blue-400 hover:bg-blue-500/20 rounded-md" title="Email"><i data-lucide="mail" class="w-4 h-4"></i></a>` : ''}
+            <button onclick="window.editResp('${r.id}')" class="p-1.5 text-slate-400 hover:text-white bg-white/5 hover:bg-white/10 rounded-md ml-1"><i data-lucide="pencil" class="w-4 h-4"></i></button>
+            <button onclick="window.delResp('${r.id}')" class="p-1.5 text-red-400 hover:text-white bg-red-500/10 hover:bg-red-500/30 rounded-md"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+          </div>
         </td>
       </tr>
     `).join('');
@@ -1466,18 +1662,23 @@
             g.innerHTML = list.map(v => {
                 const r = window.state.responsables.find(x => x.id === v.resp);
                 return `<div class="glass-card rounded-2xl p-4 flex gap-4 group">
-        <div class="w-16 h-16 rounded-xl shrink-0 bg-navy-800 border border-white/10 flex items-center justify-center overflow-hidden">
+        <div class="w-16 h-16 rounded-xl shrink-0 bg-navy-800 border border-white/10 flex items-center justify-center overflow-hidden cursor-pointer" onclick="window.viewVeh('${v.id}')">
           ${v.photo ? `<img src="${v.photo}" class="w-full h-full object-cover">` : `<i data-lucide="${icons[v.type] || 'car'}" class="w-6 h-6 text-slate-500"></i>`}
         </div>
         <div class="flex-1 min-w-0">
-          <div class="font-mono text-gold-400 font-bold tracking-wider">${v.immat}</div>
-          <div class="font-medium text-white text-sm truncate">${v.prenom} ${v.nom}</div>
+          <div class="font-mono text-gold-400 font-bold tracking-wider cursor-pointer hover:underline" onclick="window.viewVeh('${v.id}')">${v.immat}</div>
+          <div class="font-medium text-white text-sm truncate cursor-pointer hover:text-gold-400 transition-colors" onclick="window.viewVeh('${v.id}')">${v.prenom} ${v.nom}</div>
           <div class="text-[0.65rem] text-slate-400 truncate">${v.tel || ''} ${v.email ? '· ' + v.email : ''}</div>
           ${r ? `<div class="text-[0.6rem] inline-block px-1.5 py-0.5 rounded bg-white/5 border border-white/10 mt-1">${r.prenom} ${r.nom}</div>` : ''}
         </div>
         <div class="flex flex-col gap-1 shrink-0">
+          ${v.tel ? `<a href="https://wa.me/${v.tel.replace(/\D/g,'')}" target="_blank" class="p-1.5 text-[#25D366] hover:bg-[#25D366]/20 rounded-md" title="WhatsApp"><i data-lucide="message-circle" class="w-4 h-4"></i></a>` : ''}
+          ${v.email ? `<a href="mailto:${v.email}" class="p-1.5 text-blue-400 hover:bg-blue-500/20 rounded-md" title="Email"><i data-lucide="mail" class="w-4 h-4"></i></a>` : ''}
           <button onclick="window.editVeh('${v.id}')" class="p-1.5 text-slate-400 hover:text-white hover:bg-white/10 rounded-md"><i data-lucide="pencil" class="w-4 h-4"></i></button>
           <button onclick="window.delVeh('${v.id}')" class="p-1.5 text-red-400 hover:text-white hover:bg-red-500/30 rounded-md"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+        </div>
+      </div>`;
+            }).join('');
         </div>
       </div>`;
             }).join('');
