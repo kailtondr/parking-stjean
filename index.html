@@ -1896,7 +1896,21 @@
 
         function getActsForDate(dateStr) {
             const [yy, mm, dd] = dateStr.split('-'); const day = DAYS_FR[new Date(yy, mm - 1, dd).getDay()];
-            return window.state.activities.filter(a => (a.recurrence === 'weekly' && a.days.includes(day)) || (a.recurrence === 'once' && a.date === dateStr));
+            const acts = window.state.activities.filter(a => (a.recurrence === 'weekly' && a.days.includes(day)) || (a.recurrence === 'once' && a.date === dateStr));
+            const locs = window.state.locations.filter(l => {
+                if (!l.date) return false;
+                if (l.recurrence === 'once') return l.date === dateStr;
+                if (l.recurrence === 'weekly') {
+                    const [ly, lm, ld] = l.date.split('-');
+                    return DAYS_FR[new Date(ly, lm - 1, ld).getDay()] === day && dateStr >= l.date;
+                }
+                if (l.recurrence === 'monthly') {
+                    const ld = l.date.split('-')[2];
+                    return ld === dd && dateStr >= l.date;
+                }
+                return false;
+            }).map(l => ({ id: l.id, nom: `[Location] ${l.objet}`, start: l.start, end: l.end, color: '#3b82f6', isLocation: true }));
+            return [...acts, ...locs];
         }
 
         function renderPlanning() {
@@ -1962,7 +1976,7 @@
                     const durationMins = (eh * 60 + em) - (sh * 60 + sm);
                     const height = Math.max(durationMins / 60 * HOUR_H - 2, 20);
                     const bg = a.color + '22';
-                    eventsHtml += `<div class="agenda-event" style="top:${top}px;height:${height}px;background:${bg};border-color:${a.color};color:${a.color}" onclick="window.viewActivity('${a.id}')">
+                    eventsHtml += `<div class="agenda-event" style="top:${top}px;height:${height}px;background:${bg};border-color:${a.color};color:${a.color}" onclick="${a.isLocation ? `window.viewLocation('${a.id}')` : `window.viewActivity('${a.id}')`}">
                         <div class="evt-title">${a.nom}</div>
                         <div class="evt-time">${a.start} – ${a.end}</div>
                     </div>`;
