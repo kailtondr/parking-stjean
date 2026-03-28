@@ -75,42 +75,83 @@
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
         }
 
-        /* Timeline Custom CSS (Hard to do pure Tailwind) */
-        .timeline-grid {
+        /* Google Agenda style week view */
+        .agenda-grid {
             display: grid;
-            grid-template-columns: 100px repeat(7, 1fr);
-            min-width: 800px;
-            gap: 1px;
-            background: rgba(255, 255, 255, 0.02);
+            grid-template-columns: 52px repeat(7, 1fr);
+            min-width: 700px;
         }
-
-        .tl-header {
-            background: rgba(28, 42, 62, 0.8);
-            padding: 12px 8px;
-            font-size: 0.75rem;
-            text-align: center;
-            font-weight: 500;
-            border-bottom: 1px solid rgba(201, 168, 76, 0.2);
-        }
-
-        .tl-slot {
-            border-right: 1px solid rgba(255, 255, 255, 0.03);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
-            padding: 4px;
-            min-height: 48px;
-            position: relative;
-        }
-
-        .tl-time {
-            font-size: 0.65rem;
-            color: #8a94aa;
+        .agenda-hour-label {
+            font-size: 0.6rem;
+            color: #4a5570;
             text-align: right;
-            padding: 4px 8px;
-            background: rgba(28, 42, 62, 0.4);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            padding-right: 8px;
+            height: 60px;
             display: flex;
-            align-items: center;
-            justify-content: flex-end;
+            align-items: flex-start;
+            padding-top: 2px;
+            font-family: 'DM Mono', monospace;
+            border-right: 1px solid rgba(255,255,255,0.04);
+        }
+        .agenda-day-col {
+            position: relative;
+            border-right: 1px solid rgba(255,255,255,0.04);
+            height: calc(60px * 16);
+        }
+        .agenda-hour-line {
+            position: absolute;
+            left: 0; right: 0;
+            height: 1px;
+            background: rgba(255,255,255,0.04);
+        }
+        .agenda-event {
+            position: absolute;
+            left: 2px; right: 2px;
+            border-radius: 6px;
+            padding: 3px 6px;
+            font-size: 0.68rem;
+            cursor: pointer;
+            overflow: hidden;
+            border-left: 3px solid;
+            transition: filter 0.15s;
+            z-index: 2;
+        }
+        .agenda-event:hover { filter: brightness(1.15); }
+        .agenda-event .evt-title { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .agenda-event .evt-time { opacity: 0.75; font-size: 0.6rem; }
+        .agenda-day-header {
+            text-align: center;
+            padding: 10px 4px 8px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            border-bottom: 1px solid rgba(201,168,76,0.15);
+            position: sticky;
+            top: 0;
+            background: rgba(17,24,39,0.95);
+            z-index: 10;
+        }
+        .agenda-day-header .day-num {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 28px; height: 28px; border-radius: 50%;
+            font-size: 0.9rem; font-weight: 700; margin: 0 auto;
+        }
+        .agenda-day-header.today .day-num {
+            background: #c9a84c; color: #0b1120;
+        }
+        .agenda-now-line {
+            position: absolute;
+            left: 0; right: 0;
+            height: 2px;
+            background: #e05555;
+            z-index: 5;
+        }
+        .agenda-now-line::before {
+            content: '';
+            position: absolute;
+            left: -4px; top: -4px;
+            width: 10px; height: 10px;
+            border-radius: 50%;
+            background: #e05555;
         }
 
         /* Animations */
@@ -296,7 +337,7 @@
 
         <!-- Mobile Header -->
         <div
-            class="md:hidden flex items-center justify-between p-4 glass-panel sticky top-0 z-40 border-b border-gold-border">
+            class="md:hidden flex items-center justify-between p-4 glass-panel sticky top-0 z-20 border-b border-gold-border">
             <div class="flex items-center gap-2">
                 <i data-lucide="cross" class="text-gold-500 w-5 h-5"></i>
                 <h1 class="font-serif text-xl font-bold text-gold-400">St Jean XXIII</h1>
@@ -314,44 +355,44 @@
                         <p class="text-sm text-slate-400 mt-1" id="dash-date">Chargement...</p>
                     </div>
                     <button onclick="window.showPage('codes')"
-                        class="bg-gold-500 hover:bg-gold-400 text-navy-900 w-full md:w-auto justify-center px-5 py-2.5 rounded-xl font-medium flex items-center gap-2 transition-all shadow-lg shadow-gold-500/20">
+                        class="bg-gold-500 hover:bg-gold-400 text-navy-900 px-5 py-2.5 rounded-xl font-medium flex items-center gap-2 transition-all shadow-lg shadow-gold-500/20">
                         <i data-lucide="key" class="w-4 h-4"></i> Gérer les codes
                     </button>
                 </div>
 
                 <!-- Stats Grid -->
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-                    <div class="glass-card rounded-2xl p-4 sm:p-5 relative overflow-hidden group">
+                    <div class="glass-card rounded-2xl p-5 relative overflow-hidden group">
                         <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-gold-500 to-transparent">
                         </div>
-                        <div class="text-[0.65rem] sm:text-xs uppercase tracking-wider text-slate-400 truncate">Responsables</div>
-                        <div class="font-mono text-3xl sm:text-4xl text-white mt-2 mb-1" id="stat-resp">0</div>
-                        <div class="text-[0.65rem] sm:text-xs text-slate-500 flex items-center gap-1 truncate"><i data-lucide="users"
-                                class="w-3 h-3 shrink-0"></i> Équipes enregistrées</div>
+                        <div class="text-xs uppercase tracking-wider text-slate-400">Responsables</div>
+                        <div class="font-mono text-4xl text-white mt-2 mb-1" id="stat-resp">0</div>
+                        <div class="text-xs text-slate-500 flex items-center gap-1"><i data-lucide="users"
+                                class="w-3 h-3"></i> Équipes enregistrées</div>
                     </div>
-                    <div class="glass-card rounded-2xl p-4 sm:p-5 relative overflow-hidden">
+                    <div class="glass-card rounded-2xl p-5 relative overflow-hidden">
                         <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-transparent">
                         </div>
-                        <div class="text-[0.65rem] sm:text-xs uppercase tracking-wider text-slate-400 truncate">Véhicules</div>
-                        <div class="font-mono text-3xl sm:text-4xl text-white mt-2 mb-1" id="stat-veh">0</div>
-                        <div class="text-[0.65rem] sm:text-xs text-slate-500 flex items-center gap-1 truncate"><i data-lucide="car"
-                                class="w-3 h-3 shrink-0"></i> Autorisés</div>
+                        <div class="text-xs uppercase tracking-wider text-slate-400">Véhicules</div>
+                        <div class="font-mono text-4xl text-white mt-2 mb-1" id="stat-veh">0</div>
+                        <div class="text-xs text-slate-500 flex items-center gap-1"><i data-lucide="car"
+                                class="w-3 h-3"></i> Autorisés</div>
                     </div>
-                    <div class="glass-card rounded-2xl p-4 sm:p-5 relative overflow-hidden">
+                    <div class="glass-card rounded-2xl p-5 relative overflow-hidden">
                         <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-green-500 to-transparent">
                         </div>
-                        <div class="text-[0.65rem] sm:text-xs uppercase tracking-wider text-slate-400 truncate">Activités (Semaine)</div>
-                        <div class="font-mono text-3xl sm:text-4xl text-white mt-2 mb-1" id="stat-act">0</div>
-                        <div class="text-[0.65rem] sm:text-xs text-slate-500 flex items-center gap-1 truncate"><i data-lucide="calendar"
-                                class="w-3 h-3 shrink-0"></i> Créneaux prévus</div>
+                        <div class="text-xs uppercase tracking-wider text-slate-400">Activités (Semaine)</div>
+                        <div class="font-mono text-4xl text-white mt-2 mb-1" id="stat-act">0</div>
+                        <div class="text-xs text-slate-500 flex items-center gap-1"><i data-lucide="calendar"
+                                class="w-3 h-3"></i> Créneaux prévus</div>
                     </div>
-                    <div class="glass-card rounded-2xl p-4 sm:p-5 relative overflow-hidden">
+                    <div class="glass-card rounded-2xl p-5 relative overflow-hidden">
                         <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-500 to-transparent">
                         </div>
-                        <div class="text-[0.65rem] sm:text-xs uppercase tracking-wider text-slate-400 truncate">Dernier code</div>
-                        <div class="font-mono text-lg sm:text-xl text-white mt-4 sm:mt-4 mb-1 sm:mb-2" id="stat-code-age">--</div>
-                        <div class="text-[0.65rem] sm:text-xs text-slate-500 flex items-center gap-1 truncate"><i data-lucide="clock"
-                                class="w-3 h-3 shrink-0"></i> Changement</div>
+                        <div class="text-xs uppercase tracking-wider text-slate-400">Dernier code</div>
+                        <div class="font-mono text-xl text-white mt-4 mb-2" id="stat-code-age">--</div>
+                        <div class="text-xs text-slate-500 flex items-center gap-1"><i data-lucide="clock"
+                                class="w-3 h-3"></i> Changement</div>
                     </div>
                 </div>
 
@@ -369,7 +410,7 @@
                     <div class="glass-card rounded-2xl p-6">
                         <h3 class="font-serif text-xl text-gold-400 mb-4 flex items-center gap-2"><i
                                 data-lucide="shield-check" class="w-5 h-5"></i> Codes en vigueur</h3>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="grid grid-cols-2 gap-4">
                             <div class="bg-navy-900/80 border border-gold-border rounded-xl p-5 text-center">
                                 <div class="text-[0.65rem] uppercase tracking-widest text-slate-400 mb-2">Portillon
                                 </div>
@@ -410,15 +451,15 @@
                         <p class="text-sm text-slate-400 mt-1">Gérez les responsables d'équipe ayant accès au parking
                         </p>
                     </div>
-                    <div class="flex flex-col sm:flex-row items-center gap-3">
-                        <div class="relative w-full sm:w-auto">
+                    <div class="flex items-center gap-3">
+                        <div class="relative">
                             <i data-lucide="search"
                                 class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400"></i>
                             <input type="text" placeholder="Rechercher..." oninput="window.filterResp(this.value)"
                                 class="bg-navy-800 border border-white/10 rounded-xl pl-9 pr-4 py-2.5 text-sm focus:border-gold-500 focus:ring-1 focus:ring-gold-500 outline-none transition-all w-full md:w-64">
                         </div>
                         <button onclick="window.openModal('modal-resp')"
-                            class="bg-gold-500 hover:bg-gold-400 text-navy-900 w-full sm:w-auto justify-center px-4 py-2.5 rounded-xl font-medium flex items-center gap-2 whitespace-nowrap shadow-lg shadow-gold-500/20 transition-all">
+                            class="bg-gold-500 hover:bg-gold-400 text-navy-900 px-4 py-2.5 rounded-xl font-medium flex items-center gap-2 whitespace-nowrap shadow-lg shadow-gold-500/20 transition-all">
                             <i data-lucide="plus" class="w-4 h-4"></i> Ajouter
                         </button>
                     </div>
@@ -446,77 +487,85 @@
 
             <!-- PAGE: PLANNING -->
             <section id="page-planning" class="page-content">
-                <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+                <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6">
                     <div>
-                        <h2 class="font-serif text-3xl md:text-4xl font-bold text-gold-400">Planning des activités</h2>
-                        <p class="text-sm text-slate-400 mt-1">Gestion des créneaux d'utilisation</p>
+                        <h2 class="font-serif text-3xl md:text-4xl font-bold text-gold-400">Planning</h2>
+                        <p class="text-sm text-slate-400 mt-1">Activités & locations de la salle</p>
                     </div>
-                    <div class="flex flex-wrap items-center gap-3">
-                        <label
-                            class="cursor-pointer bg-navy-800 hover:bg-navy-700 border border-gold-border text-gold-400 px-4 py-2 rounded-xl text-sm font-medium flex items-center justify-center gap-2 transition-all flex-1 sm:flex-none">
-                            <i data-lucide="download" class="w-4 h-4"></i> Importer ICS
+                    <div class="flex flex-wrap items-center gap-2">
+                        <label class="cursor-pointer bg-navy-800 hover:bg-navy-700 border border-gold-border text-gold-400 px-3 py-2 rounded-xl text-sm font-medium flex items-center gap-2 transition-all">
+                            <i data-lucide="download" class="w-4 h-4"></i> ICS
                             <input type="file" accept=".ics" class="hidden" onchange="window.importICS(this)">
                         </label>
-                        <button onclick="window.exportICS()"
-                            class="bg-navy-800 hover:bg-navy-700 border border-gold-border text-gold-400 px-4 py-2 rounded-xl text-sm font-medium flex items-center justify-center gap-2 transition-all flex-1 sm:flex-none">
+                        <button onclick="window.exportICS()" class="bg-navy-800 hover:bg-navy-700 border border-gold-border text-gold-400 px-3 py-2 rounded-xl text-sm font-medium flex items-center gap-2 transition-all">
                             <i data-lucide="upload" class="w-4 h-4"></i> Exporter
                         </button>
-                        <button onclick="window.openModal('modal-activity')"
-                            class="bg-gold-500 hover:bg-gold-400 text-navy-900 w-full sm:w-auto px-4 py-2 rounded-xl text-sm font-medium flex items-center justify-center gap-2 shadow-lg shadow-gold-500/20 transition-all mt-2 sm:mt-0">
-                            <i data-lucide="plus" class="w-4 h-4"></i> Ajouter
+                        <div id="plan-add-btn-wrap">
+                            <button onclick="window.openModal('modal-activity')" class="bg-gold-500 hover:bg-gold-400 text-navy-900 px-4 py-2 rounded-xl text-sm font-medium flex items-center gap-2 shadow-lg shadow-gold-500/20 transition-all" id="btn-add-activity">
+                                <i data-lucide="plus" class="w-4 h-4"></i> Activité
+                            </button>
+                        </div>
+                        <button onclick="window.openModal('modal-location')" class="bg-navy-800 hover:bg-navy-700 border border-gold-border text-gold-400 px-4 py-2 rounded-xl text-sm font-medium flex items-center gap-2 transition-all">
+                            <i data-lucide="building-2" class="w-4 h-4"></i> Location
                         </button>
                     </div>
                 </div>
 
-                <div class="flex flex-wrap gap-2 mb-6 bg-navy-800/50 p-1.5 rounded-xl w-fit border border-white/5">
-                    <button onclick="window.switchPlanTab('week')" id="tab-btn-week"
-                        class="px-5 py-2 rounded-lg text-sm font-medium transition-all bg-gold-dim text-gold-400 shadow-sm">Semaine</button>
-                    <button onclick="window.switchPlanTab('month')" id="tab-btn-month"
-                        class="px-5 py-2 rounded-lg text-sm font-medium text-slate-400 hover:text-white transition-all">Mois</button>
-                    <button onclick="window.switchPlanTab('list')" id="tab-btn-list"
-                        class="px-5 py-2 rounded-lg text-sm font-medium text-slate-400 hover:text-white transition-all">Liste</button>
+                <!-- Plan Tabs -->
+                <div class="flex gap-2 mb-5 bg-navy-800/50 p-1.5 rounded-xl w-fit border border-white/5">
+                    <button onclick="window.switchPlanTab('week')" id="tab-btn-week" class="px-4 py-2 rounded-lg text-sm font-medium transition-all bg-gold-dim text-gold-400 shadow-sm">Semaine</button>
+                    <button onclick="window.switchPlanTab('month')" id="tab-btn-month" class="px-4 py-2 rounded-lg text-sm font-medium text-slate-400 hover:text-white transition-all">Mois</button>
+                    <button onclick="window.switchPlanTab('list')" id="tab-btn-list" class="px-4 py-2 rounded-lg text-sm font-medium text-slate-400 hover:text-white transition-all">Liste</button>
+                    <button onclick="window.switchPlanTab('locations')" id="tab-btn-locations" class="px-4 py-2 rounded-lg text-sm font-medium text-slate-400 hover:text-white transition-all flex items-center gap-1.5"><i data-lucide="building-2" class="w-3.5 h-3.5"></i> Locations</button>
                 </div>
 
+                <!-- WEEK TAB — Google Agenda style -->
                 <div id="tab-week" class="block">
-                    <div class="glass-card rounded-2xl p-5">
-                        <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mb-4">
-                            <div class="flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-start">
-                                <button onclick="window.changeWeek(-1)"
-                                    class="p-1.5 rounded-lg hover:bg-white/10 text-slate-400 hover:text-white"><i
-                                        data-lucide="chevron-left" class="w-5 h-5"></i></button>
-                                <h3 id="week-label" class="font-serif text-lg sm:text-xl text-gold-400 min-w-0 sm:min-w-[200px] text-center truncate">
-                                    --</h3>
-                                <button onclick="window.changeWeek(1)"
-                                    class="p-1.5 rounded-lg hover:bg-white/10 text-slate-400 hover:text-white"><i
-                                        data-lucide="chevron-right" class="w-5 h-5"></i></button>
+                    <div class="glass-card rounded-2xl p-4">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center gap-3">
+                                <button onclick="window.changeWeek(-1)" class="p-1.5 rounded-lg hover:bg-white/10 text-slate-400 hover:text-white"><i data-lucide="chevron-left" class="w-5 h-5"></i></button>
+                                <h3 id="week-label" class="font-serif text-xl text-gold-400 min-w-[200px] text-center">--</h3>
+                                <button onclick="window.changeWeek(1)" class="p-1.5 rounded-lg hover:bg-white/10 text-slate-400 hover:text-white"><i data-lucide="chevron-right" class="w-5 h-5"></i></button>
                             </div>
-                            <button onclick="window.goToCurrentWeek()"
-                                class="text-xs bg-white/5 hover:bg-white/10 border border-white/10 px-3 py-1.5 rounded-md text-slate-300 w-full sm:w-auto">Aujourd'hui</button>
+                            <button onclick="window.goToCurrentWeek()" class="text-xs bg-white/5 hover:bg-white/10 border border-white/10 px-3 py-1.5 rounded-md text-slate-300">Aujourd'hui</button>
                         </div>
-                        <div class="overflow-x-auto rounded-xl border border-white/5 bg-navy-900/50">
+                        <div class="overflow-x-auto rounded-xl border border-white/5 bg-navy-900/30">
                             <div id="week-timeline"></div>
                         </div>
                     </div>
                 </div>
 
+                <!-- MONTH TAB -->
                 <div id="tab-month" class="hidden">
                     <div class="glass-card rounded-2xl p-5">
-                        <div class="flex items-center justify-center gap-2 sm:gap-4 mb-6">
-                            <button onclick="window.changeMonth(-1)"
-                                class="p-1.5 rounded-lg hover:bg-white/10 text-slate-400 hover:text-white"><i
-                                    data-lucide="chevron-left" class="w-5 h-5"></i></button>
-                            <h3 id="month-label" class="font-serif text-xl sm:text-2xl text-gold-400 capitalize w-auto sm:w-48 text-center truncate px-2">
-                                --</h3>
-                            <button onclick="window.changeMonth(1)"
-                                class="p-1.5 rounded-lg hover:bg-white/10 text-slate-400 hover:text-white"><i
-                                    data-lucide="chevron-right" class="w-5 h-5"></i></button>
+                        <div class="flex items-center justify-center gap-4 mb-6">
+                            <button onclick="window.changeMonth(-1)" class="p-1.5 rounded-lg hover:bg-white/10 text-slate-400 hover:text-white"><i data-lucide="chevron-left" class="w-5 h-5"></i></button>
+                            <h3 id="month-label" class="font-serif text-2xl text-gold-400 capitalize w-48 text-center">--</h3>
+                            <button onclick="window.changeMonth(1)" class="p-1.5 rounded-lg hover:bg-white/10 text-slate-400 hover:text-white"><i data-lucide="chevron-right" class="w-5 h-5"></i></button>
                         </div>
                         <div id="month-calendar-large"></div>
                     </div>
                 </div>
 
+                <!-- LIST TAB -->
                 <div id="tab-list" class="hidden glass-card rounded-2xl p-6">
                     <div id="activities-list" class="space-y-6"></div>
+                </div>
+
+                <!-- LOCATIONS TAB -->
+                <div id="tab-locations" class="hidden">
+                    <div class="glass-card rounded-2xl overflow-hidden">
+                        <div class="p-5 border-b border-white/5 flex items-center justify-between">
+                            <h3 class="font-serif text-xl text-gold-400 flex items-center gap-2"><i data-lucide="building-2" class="w-5 h-5"></i> Locations de la salle</h3>
+                            <button onclick="window.openModal('modal-location')" class="bg-gold-500 hover:bg-gold-400 text-navy-900 px-4 py-2 rounded-xl text-sm font-medium flex items-center gap-2">
+                                <i data-lucide="plus" class="w-4 h-4"></i> Nouvelle location
+                            </button>
+                        </div>
+                        <div id="locations-list" class="divide-y divide-white/5 p-2">
+                            <div class="text-center py-10 text-slate-500"><i data-lucide="building-2" class="w-8 h-8 mx-auto mb-2 opacity-40"></i>Aucune location</div>
+                        </div>
+                    </div>
                 </div>
             </section>
 
@@ -527,15 +576,15 @@
                         <h2 class="font-serif text-3xl md:text-4xl font-bold text-gold-400">Véhicules</h2>
                         <p class="text-sm text-slate-400 mt-1">Registre des voitures et motos autorisées</p>
                     </div>
-                    <div class="flex flex-col sm:flex-row items-center gap-3">
-                        <div class="relative w-full sm:w-auto">
+                    <div class="flex items-center gap-3">
+                        <div class="relative">
                             <i data-lucide="search"
                                 class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400"></i>
                             <input type="text" placeholder="Plaque, nom..." oninput="window.filterVehicules(this.value)"
                                 class="bg-navy-800 border border-white/10 rounded-xl pl-9 pr-4 py-2.5 text-sm focus:border-gold-500 outline-none w-full md:w-64">
                         </div>
                         <button onclick="window.openModal('modal-vehicle')"
-                            class="bg-gold-500 hover:bg-gold-400 text-navy-900 w-full sm:w-auto justify-center px-4 py-2.5 rounded-xl font-medium flex items-center gap-2 shadow-lg shadow-gold-500/20">
+                            class="bg-gold-500 hover:bg-gold-400 text-navy-900 px-4 py-2.5 rounded-xl font-medium flex items-center gap-2 shadow-lg shadow-gold-500/20">
                             <i data-lucide="plus" class="w-4 h-4"></i> Ajouter
                         </button>
                     </div>
@@ -551,7 +600,7 @@
                         <p class="text-sm text-slate-400 mt-1">Journal des entrées et sorties</p>
                     </div>
                     <button onclick="window.openModal('modal-acces')"
-                        class="bg-gold-500 hover:bg-gold-400 text-navy-900 w-full md:w-auto justify-center px-4 py-2.5 rounded-xl font-medium flex items-center gap-2 shadow-lg shadow-gold-500/20">
+                        class="bg-gold-500 hover:bg-gold-400 text-navy-900 px-4 py-2.5 rounded-xl font-medium flex items-center gap-2 shadow-lg shadow-gold-500/20">
                         <i data-lucide="plus" class="w-4 h-4"></i> Enregistrer un accès
                     </button>
                 </div>
@@ -612,11 +661,11 @@
                         <div
                             class="bg-navy-900/80 border border-gold-border rounded-xl p-6 text-center mb-6 relative z-10">
                             <div class="text-xs uppercase tracking-widest text-slate-400 mb-2">Code Actuel</div>
-                            <div class="font-mono text-4xl sm:text-5xl text-gold-400 tracking-[0.3em] font-light mb-2"
-                                id="code-portillon-display">----</div>
+                            <div class="font-mono text-5xl text-gold-400 tracking-[0.3em] font-light mb-2"
+                                id="code-portillon-display">------#</div>
                             <div class="text-xs text-slate-500" id="code-portillon-date">--</div>
                         </div>
-                        <div class="grid grid-cols-2 sm:flex sm:flex-wrap gap-2 relative z-10">
+                        <div class="flex flex-wrap gap-2 relative z-10">
                             <button onclick="window.generateCode('portillon')"
                                 class="flex-1 bg-navy-800 hover:bg-navy-700 border border-white/10 text-white px-3 py-2 rounded-lg text-sm flex items-center justify-center gap-2 transition-all"><i
                                     data-lucide="dices" class="w-4 h-4 text-gold-400"></i> Générer</button>
@@ -641,11 +690,11 @@
                         <div
                             class="bg-navy-900/80 border border-gold-border rounded-xl p-6 text-center mb-6 relative z-10">
                             <div class="text-xs uppercase tracking-widest text-slate-400 mb-2">Code Actuel</div>
-                            <div class="font-mono text-4xl sm:text-5xl text-gold-400 tracking-[0.3em] font-light mb-2"
+                            <div class="font-mono text-5xl text-gold-400 tracking-[0.3em] font-light mb-2"
                                 id="code-portail-display">----</div>
                             <div class="text-xs text-slate-500" id="code-portail-date">--</div>
                         </div>
-                        <div class="grid grid-cols-2 sm:flex sm:flex-wrap gap-2 relative z-10">
+                        <div class="flex flex-wrap gap-2 relative z-10">
                             <button onclick="window.generateCode('portail')"
                                 class="flex-1 bg-navy-800 hover:bg-navy-700 border border-white/10 text-white px-3 py-2 rounded-lg text-sm flex items-center justify-center gap-2 transition-all"><i
                                     data-lucide="dices" class="w-4 h-4 text-gold-400"></i> Générer</button>
@@ -692,13 +741,13 @@
     <!-- Modal Responsable -->
     <div id="modal-resp"
         class="fixed inset-0 z-50 hidden items-center justify-center bg-black/60 backdrop-blur-sm px-4">
-        <div class="glass-card w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] animate-[fadeIn_0.2s_ease-out]">
-            <div class="flex items-center justify-between p-5 border-b border-white/10 bg-navy-900/50 shrink-0">
+        <div class="glass-card w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden animate-[fadeIn_0.2s_ease-out]">
+            <div class="flex items-center justify-between p-5 border-b border-white/10 bg-navy-900/50">
                 <h3 id="modal-resp-title" class="font-serif text-2xl text-gold-400">Ajouter un responsable</h3>
                 <button onclick="window.closeModal('modal-resp')" class="text-slate-400 hover:text-white"><i
                         data-lucide="x"></i></button>
             </div>
-            <div class="p-6 space-y-4 overflow-y-auto flex-1">
+            <div class="p-6 space-y-4">
                 <input type="hidden" id="resp-edit-id">
                 <input type="hidden" id="resp-photo-data">
                 <div class="flex flex-col md:flex-row gap-5">
@@ -714,12 +763,12 @@
                     </div>
                     <!-- Fields -->
                     <div class="flex-1 space-y-3">
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div class="grid grid-cols-2 gap-3">
                             <div><label class="block text-xs uppercase tracking-wider text-slate-400 mb-1">Prénom *</label><input type="text" id="resp-prenom" class="w-full bg-navy-800 border border-white/10 rounded-lg px-3 py-2 text-white focus:border-gold-500 outline-none"></div>
                             <div><label class="block text-xs uppercase tracking-wider text-slate-400 mb-1">Nom *</label><input type="text" id="resp-nom" class="w-full bg-navy-800 border border-white/10 rounded-lg px-3 py-2 text-white focus:border-gold-500 outline-none"></div>
                         </div>
                         <div><label class="block text-xs uppercase tracking-wider text-slate-400 mb-1">Équipe / Groupe</label><input type="text" id="resp-equipe" placeholder="ex: Catéchèse" class="w-full bg-navy-800 border border-white/10 rounded-lg px-3 py-2 text-white focus:border-gold-500 outline-none"></div>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div class="grid grid-cols-2 gap-3">
                             <div><label class="block text-xs uppercase tracking-wider text-slate-400 mb-1">Téléphone</label><input type="tel" id="resp-tel" class="w-full bg-navy-800 border border-white/10 rounded-lg px-3 py-2 text-white focus:border-gold-500 outline-none"></div>
                             <div><label class="block text-xs uppercase tracking-wider text-slate-400 mb-1">Email</label><input type="email" id="resp-email" class="w-full bg-navy-800 border border-white/10 rounded-lg px-3 py-2 text-white focus:border-gold-500 outline-none"></div>
                         </div>
@@ -760,7 +809,7 @@
                         *</label><input type="text" id="act-nom"
                         class="w-full bg-navy-800 border border-white/10 rounded-lg px-3 py-2 text-white focus:border-gold-500 outline-none">
                 </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="grid grid-cols-2 gap-4">
                     <div><label
                             class="block text-xs uppercase tracking-wider text-slate-400 mb-1">Responsable</label><select
                             id="act-resp"
@@ -790,7 +839,7 @@
                         type="date" id="act-date"
                         class="w-full bg-navy-800 border border-white/10 rounded-lg px-3 py-2 text-white focus:border-gold-500 outline-none">
                 </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="grid grid-cols-2 gap-4">
                     <div><label class="block text-xs uppercase tracking-wider text-slate-400 mb-1">Heure début
                             *</label><input type="time" id="act-start"
                             class="w-full bg-navy-800 border border-white/10 rounded-lg px-3 py-2 text-white focus:border-gold-500 outline-none">
@@ -839,7 +888,7 @@
                         <input type="hidden" id="veh-photo-data">
                     </div>
                     <div class="w-full md:w-2/3 space-y-4">
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="grid grid-cols-2 gap-4">
                             <div><label class="block text-xs uppercase tracking-wider text-slate-400 mb-1">Prénom
                                     *</label><input type="text" id="veh-prenom"
                                     class="w-full bg-navy-800 border border-white/10 rounded-lg px-3 py-2 text-white outline-none focus:border-gold-500">
@@ -849,7 +898,7 @@
                                     class="w-full bg-navy-800 border border-white/10 rounded-lg px-3 py-2 text-white outline-none focus:border-gold-500">
                             </div>
                         </div>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="grid grid-cols-2 gap-4">
                             <div><label
                                     class="block text-xs uppercase tracking-wider text-slate-400 mb-1">Immatriculation
                                     *</label><input type="text" id="veh-immat"
@@ -864,7 +913,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="grid grid-cols-2 gap-4">
                             <div><label
                                     class="block text-xs uppercase tracking-wider text-slate-400 mb-1">Téléphone</label><input
                                     type="tel" id="veh-tel"
@@ -895,14 +944,14 @@
     <!-- Modal Accès -->
     <div id="modal-acces"
         class="fixed inset-0 z-50 hidden items-center justify-center bg-black/60 backdrop-blur-sm px-4">
-        <div class="glass-card w-full max-w-sm rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
-            <div class="flex items-center justify-between p-5 border-b border-white/10 bg-navy-900/50 shrink-0">
+        <div class="glass-card w-full max-w-sm rounded-2xl shadow-2xl overflow-hidden">
+            <div class="flex items-center justify-between p-5 border-b border-white/10 bg-navy-900/50">
                 <h3 class="font-serif text-2xl text-gold-400">Enregistrer Accès</h3>
                 <button onclick="window.closeModal('modal-acces')" class="text-slate-400 hover:text-white"><i
                         data-lucide="x"></i></button>
             </div>
-            <div class="p-6 space-y-4 overflow-y-auto flex-1">
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="p-6 space-y-4">
+                <div class="grid grid-cols-2 gap-4">
                     <div><label class="block text-xs uppercase tracking-wider text-slate-400 mb-1">Date *</label><input
                             type="date" id="acces-date"
                             class="w-full bg-navy-800 border border-white/10 rounded-lg px-3 py-2 text-white outline-none">
@@ -916,7 +965,7 @@
                         id="acces-veh"
                         class="w-full bg-navy-800 border border-white/10 rounded-lg px-3 py-2 text-white outline-none"></select>
                 </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="grid grid-cols-2 gap-4">
                     <div><label class="block text-xs uppercase tracking-wider text-slate-400 mb-1">Action</label><select
                             id="acces-type"
                             class="w-full bg-navy-800 border border-white/10 rounded-lg px-3 py-2 text-white outline-none">
@@ -951,9 +1000,10 @@
         <div class="glass-card w-full max-w-sm rounded-2xl shadow-2xl overflow-hidden">
             <div class="p-6 text-center">
                 <h3 id="set-code-title" class="font-serif text-2xl text-gold-400 mb-4">Nouveau Code</h3>
-                <input type="text" id="set-code-input" maxlength="4" placeholder="0000"
-                    class="w-full bg-navy-900 border-2 border-gold-border rounded-xl py-4 text-center text-4xl font-mono text-gold-400 tracking-[0.5em] focus:border-gold-500 outline-none mb-6"
+                <input type="text" id="set-code-input" maxlength="6" placeholder="000000"
+                    class="w-full bg-navy-900 border-2 border-gold-border rounded-xl py-4 text-center text-4xl font-mono text-gold-400 tracking-[0.5em] focus:border-gold-500 outline-none mb-2"
                     oninput="this.value=this.value.replace(/\D/g,'')">
+                <p id="set-code-hint" class="text-xs text-slate-500 mb-6">6 chiffres — le # sera ajouté automatiquement</p>
                 <input type="hidden" id="set-code-target">
                 <div class="flex gap-3">
                     <button onclick="window.closeModal('modal-set-code')"
@@ -995,7 +1045,7 @@
                         <span id="vr-email" class="text-slate-300 break-all"></span>
                     </div>
                 </div>
-                <div class="mt-5 flex flex-col sm:flex-row gap-3">
+                <div class="mt-5 flex gap-3">
                     <a id="vr-wa-btn" href="#" target="_blank"
                         class="flex-1 flex items-center justify-center gap-2 bg-[#25D366]/20 hover:bg-[#25D366]/30 border border-[#25D366]/40 text-[#25D366] px-4 py-2.5 rounded-xl text-sm font-medium transition-all">
                         <i data-lucide="message-circle" class="w-4 h-4"></i> WhatsApp
@@ -1049,7 +1099,7 @@
                     </div>
                 </div>
                 <!-- Actions -->
-                <div class="flex flex-col sm:flex-row gap-3">
+                <div class="flex gap-3">
                     <a id="vv-wa-btn" href="#" target="_blank"
                         class="flex-1 flex items-center justify-center gap-2 bg-[#25D366]/20 hover:bg-[#25D366]/30 border border-[#25D366]/40 text-[#25D366] px-4 py-2.5 rounded-xl text-sm font-medium transition-all">
                         <i data-lucide="message-circle" class="w-4 h-4"></i> WhatsApp
@@ -1070,6 +1120,128 @@
     <!-- Photo lightbox -->
     <div id="photo-lightbox" class="fixed inset-0 z-[200] hidden items-center justify-center bg-black/90 backdrop-blur-md" onclick="this.classList.add('hidden');this.classList.remove('flex')">
         <img id="lightbox-img" src="" class="max-w-[90vw] max-h-[90vh] rounded-2xl shadow-2xl object-contain">
+    </div>
+
+    <!-- Modal Location -->
+    <div id="modal-location" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/60 backdrop-blur-sm px-4 py-6">
+        <div class="glass-card w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-full">
+            <div class="flex items-center justify-between p-5 border-b border-white/10 bg-navy-900/50 shrink-0">
+                <h3 id="modal-loc-title" class="font-serif text-2xl text-gold-400 flex items-center gap-2"><i data-lucide="building-2" class="w-5 h-5"></i> Nouvelle location</h3>
+                <button onclick="window.closeModal('modal-location')" class="text-slate-400 hover:text-white"><i data-lucide="x"></i></button>
+            </div>
+            <div class="p-6 overflow-y-auto space-y-4 flex-1">
+                <input type="hidden" id="loc-edit-id">
+                <div class="flex flex-col md:flex-row gap-5">
+                    <!-- Photo -->
+                    <div class="flex flex-col items-center gap-2 shrink-0">
+                        <label class="text-xs uppercase tracking-wider text-slate-400">Photo</label>
+                        <div id="loc-photo-preview" onclick="document.getElementById('loc-photo-input').click()"
+                            class="w-24 h-24 bg-navy-800 border-2 border-dashed border-white/20 rounded-full flex flex-col items-center justify-center text-slate-500 cursor-pointer hover:border-gold-500 transition-all overflow-hidden relative">
+                            <i data-lucide="camera" class="w-7 h-7"></i>
+                            <input type="file" id="loc-photo-input" accept="image/*" class="hidden" onchange="window.handleLocPhoto(this)">
+                        </div>
+                        <input type="hidden" id="loc-photo-data">
+                    </div>
+                    <div class="flex-1 space-y-3">
+                        <div class="grid grid-cols-2 gap-3">
+                            <div><label class="block text-xs uppercase tracking-wider text-slate-400 mb-1">Prénom *</label><input type="text" id="loc-prenom" class="w-full bg-navy-800 border border-white/10 rounded-lg px-3 py-2 text-white outline-none focus:border-gold-500"></div>
+                            <div><label class="block text-xs uppercase tracking-wider text-slate-400 mb-1">Nom *</label><input type="text" id="loc-nom" class="w-full bg-navy-800 border border-white/10 rounded-lg px-3 py-2 text-white outline-none focus:border-gold-500"></div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div><label class="block text-xs uppercase tracking-wider text-slate-400 mb-1">Téléphone</label><input type="tel" id="loc-tel" class="w-full bg-navy-800 border border-white/10 rounded-lg px-3 py-2 text-white outline-none focus:border-gold-500"></div>
+                            <div><label class="block text-xs uppercase tracking-wider text-slate-400 mb-1">Email</label><input type="email" id="loc-email" class="w-full bg-navy-800 border border-white/10 rounded-lg px-3 py-2 text-white outline-none focus:border-gold-500"></div>
+                        </div>
+                    </div>
+                </div>
+                <hr class="border-white/5">
+                <div><label class="block text-xs uppercase tracking-wider text-slate-400 mb-1">Objet de la location *</label><input type="text" id="loc-objet" placeholder="Anniversaire, réunion, fête..." class="w-full bg-navy-800 border border-white/10 rounded-lg px-3 py-2 text-white outline-none focus:border-gold-500"></div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div><label class="block text-xs uppercase tracking-wider text-slate-400 mb-1">Date *</label><input type="date" id="loc-date" class="w-full bg-navy-800 border border-white/10 rounded-lg px-3 py-2 text-white outline-none focus:border-gold-500"></div>
+                    <div>
+                        <label class="block text-xs uppercase tracking-wider text-slate-400 mb-1">Récurrence</label>
+                        <select id="loc-recurrence" class="w-full bg-navy-800 border border-white/10 rounded-lg px-3 py-2 text-white outline-none focus:border-gold-500">
+                            <option value="once">Ponctuelle</option>
+                            <option value="weekly">Hebdomadaire</option>
+                            <option value="monthly">Mensuelle</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div><label class="block text-xs uppercase tracking-wider text-slate-400 mb-1">Heure début *</label><input type="time" id="loc-start" class="w-full bg-navy-800 border border-white/10 rounded-lg px-3 py-2 text-white outline-none focus:border-gold-500"></div>
+                    <div><label class="block text-xs uppercase tracking-wider text-slate-400 mb-1">Heure fin *</label><input type="time" id="loc-end" class="w-full bg-navy-800 border border-white/10 rounded-lg px-3 py-2 text-white outline-none focus:border-gold-500"></div>
+                </div>
+                <div><label class="block text-xs uppercase tracking-wider text-slate-400 mb-1">Règlement / Conditions</label><textarea id="loc-reglement" rows="3" placeholder="Conditions particulières, caution versée, accès autorisés..." class="w-full bg-navy-800 border border-white/10 rounded-lg px-3 py-2 text-white outline-none focus:border-gold-500 resize-none"></textarea></div>
+                <div><label class="block text-xs uppercase tracking-wider text-slate-400 mb-1">Note interne</label><input type="text" id="loc-note" placeholder="Observation..." class="w-full bg-navy-800 border border-white/10 rounded-lg px-3 py-2 text-white outline-none focus:border-gold-500"></div>
+            </div>
+            <div class="p-5 border-t border-white/10 flex justify-end gap-3 bg-navy-900/50 shrink-0">
+                <button onclick="window.closeModal('modal-location')" class="px-4 py-2 rounded-lg text-sm text-slate-300 hover:bg-white/5">Annuler</button>
+                <button onclick="window.saveLocation()" class="bg-gold-500 hover:bg-gold-400 text-navy-900 px-6 py-2 rounded-lg text-sm font-medium">Enregistrer</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Vue Activité -->
+    <div id="modal-view-activity" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/70 backdrop-blur-sm px-4">
+        <div class="glass-card w-full max-w-md rounded-2xl shadow-2xl overflow-hidden">
+            <div class="h-2" id="va-color-bar"></div>
+            <div class="flex items-center justify-between px-5 pt-4 pb-2">
+                <h3 id="va-title" class="font-serif text-xl text-white font-bold"></h3>
+                <div class="flex gap-2">
+                    <button id="va-edit-btn" class="p-1.5 text-gold-400 hover:bg-gold-500/20 rounded-lg"><i data-lucide="pencil" class="w-4 h-4"></i></button>
+                    <button id="va-del-btn" class="p-1.5 text-red-400 hover:bg-red-500/20 rounded-lg"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                    <button onclick="window.closeModal('modal-view-activity')" class="p-1.5 text-slate-400 hover:text-white rounded-lg"><i data-lucide="x" class="w-4 h-4"></i></button>
+                </div>
+            </div>
+            <div class="px-5 pb-6 space-y-3">
+                <div class="flex items-center gap-2 text-sm text-slate-300"><i data-lucide="clock" class="w-4 h-4 text-slate-500"></i><span id="va-time"></span></div>
+                <div class="flex items-center gap-2 text-sm text-slate-300" id="va-recurrence-row"><i data-lucide="repeat" class="w-4 h-4 text-slate-500"></i><span id="va-recurrence"></span></div>
+                <div class="flex items-center gap-2 text-sm text-slate-300" id="va-desc-row"><i data-lucide="map-pin" class="w-4 h-4 text-slate-500"></i><span id="va-desc"></span></div>
+                <div id="va-resp-row" class="flex items-center gap-3 bg-navy-800/60 rounded-xl p-3 cursor-pointer hover:bg-navy-700/60 transition-colors border border-white/5" onclick="">
+                    <div id="va-resp-avatar" class="w-8 h-8 rounded-full bg-navy-700 border border-gold-border overflow-hidden flex items-center justify-center text-gold-400 font-bold text-sm shrink-0"></div>
+                    <div class="flex-1 min-w-0">
+                        <div id="va-resp-name" class="text-sm font-medium text-white"></div>
+                        <div id="va-resp-equipe" class="text-xs text-slate-400"></div>
+                    </div>
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-slate-500"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Vue Location -->
+    <div id="modal-view-location" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/70 backdrop-blur-sm px-4">
+        <div class="glass-card w-full max-w-md rounded-2xl shadow-2xl overflow-hidden">
+            <div class="flex items-center justify-between p-5 border-b border-white/5 bg-navy-900/50">
+                <h3 class="font-serif text-xl text-gold-400 flex items-center gap-2"><i data-lucide="building-2" class="w-5 h-5"></i> Détail location</h3>
+                <div class="flex gap-2">
+                    <button id="vloc-edit-btn" class="p-1.5 text-gold-400 hover:bg-gold-500/20 rounded-lg"><i data-lucide="pencil" class="w-4 h-4"></i></button>
+                    <button id="vloc-del-btn" class="p-1.5 text-red-400 hover:bg-red-500/20 rounded-lg"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                    <button onclick="window.closeModal('modal-view-location')" class="p-1.5 text-slate-400 hover:text-white rounded-lg"><i data-lucide="x" class="w-4 h-4"></i></button>
+                </div>
+            </div>
+            <div class="p-5 space-y-4">
+                <div class="flex items-center gap-4">
+                    <div id="vloc-avatar" class="w-14 h-14 rounded-full bg-navy-800 border border-gold-border overflow-hidden flex items-center justify-center text-gold-400 font-bold text-lg shrink-0"></div>
+                    <div>
+                        <div id="vloc-name" class="text-lg font-semibold text-white"></div>
+                        <div id="vloc-objet" class="text-sm text-gold-400"></div>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-3 text-sm">
+                    <div class="bg-navy-800/50 rounded-xl p-3 border border-white/5"><div class="text-xs text-slate-500 mb-1">Date</div><div id="vloc-date" class="text-white font-medium"></div></div>
+                    <div class="bg-navy-800/50 rounded-xl p-3 border border-white/5"><div class="text-xs text-slate-500 mb-1">Horaires</div><div id="vloc-time" class="text-white font-medium font-mono"></div></div>
+                </div>
+                <div class="flex gap-3">
+                    <a id="vloc-wa" href="#" target="_blank" class="flex-1 flex items-center justify-center gap-2 bg-[#25D366]/20 border border-[#25D366]/40 text-[#25D366] px-3 py-2 rounded-xl text-sm font-medium"><i data-lucide="message-circle" class="w-4 h-4"></i> WhatsApp</a>
+                    <a id="vloc-email" href="#" class="flex-1 flex items-center justify-center gap-2 bg-blue-500/10 border border-blue-500/30 text-blue-400 px-3 py-2 rounded-xl text-sm font-medium"><i data-lucide="mail" class="w-4 h-4"></i> Email</a>
+                </div>
+                <div id="vloc-reglement-section" class="hidden">
+                    <div class="text-xs uppercase tracking-wider text-slate-500 mb-2">Règlement / Conditions</div>
+                    <div id="vloc-reglement" class="text-sm text-slate-300 bg-navy-800/40 rounded-xl p-3 border border-white/5 whitespace-pre-wrap"></div>
+                </div>
+                <div id="vloc-note-section" class="hidden text-xs text-slate-400 italic" id="vloc-note"></div>
+            </div>
+        </div>
     </div>
 
     <!-- Toast Container -->
@@ -1125,7 +1297,7 @@
         // State
         window.state = {
             user: null, ready: false,
-            responsables: [], activities: [], vehicles: [], acces: [], codes: {}, codeHistory: [], log: []
+            responsables: [], activities: [], vehicles: [], acces: [], codes: {}, codeHistory: [], log: [], locations: []
         };
 
         const DAYS_FR = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
@@ -1197,7 +1369,7 @@
         };
 
         function setupSubscriptions() {
-            const cols = ['responsables', 'activities', 'vehicles', 'acces', 'codes', 'codeHistory', 'log'];
+            const cols = ['responsables', 'activities', 'vehicles', 'acces', 'codes', 'codeHistory', 'log', 'locations'];
             cols.forEach(col => {
                 const q = collection(db, 'artifacts', appId, 'public', 'data', col);
                 onSnapshot(q, (snapshot) => {
@@ -1206,9 +1378,11 @@
                         snapshot.docs.forEach(d => window.state.codes[d.id] = d.data());
                     } else {
                         window.state[col] = snapshot.docs.map(d => d.data());
-                        // Sort log and history newest first
                         if (col === 'log' || col === 'codeHistory' || col === 'acces') {
                             window.state[col].sort((a, b) => new Date(b.date || b.time) - new Date(a.date || a.time));
+                        }
+                        if (col === 'locations') {
+                            window.state[col].sort((a, b) => a.date?.localeCompare(b.date || ''));
                         }
                     }
                     window.state.ready = true;
@@ -1295,10 +1469,9 @@
             const aVSel = document.getElementById('acces-veh'); if (aVSel) { const v = aVSel.value; aVSel.innerHTML = '<option value="">-- Sélectionner --</option>' + window.state.vehicles.map(r => `<option value="${r.id}">${r.immat} (${r.nom})</option>`).join(''); aVSel.value = v; }
         }
 
-        // --- RENDERING ---
         function renderAll() {
             if (!window.state.ready) return;
-            renderDash(); renderResp(); renderPlanning(); renderVehicles(); renderAcces(); renderCodes(); fillSelects();
+            renderDash(); renderResp(); renderPlanning(); renderVehicles(); renderAcces(); renderCodes(); renderLocations(); fillSelects();
             lucide.createIcons();
         }
 
@@ -1529,8 +1702,19 @@
         };
 
         window.switchPlanTab = (t) => {
-            ['week', 'month', 'list'].forEach(x => { document.getElementById('tab-' + x).classList.add('hidden'); document.getElementById('tab-btn-' + x).classList.remove('bg-gold-dim', 'text-gold-400'); document.getElementById('tab-btn-' + x).classList.add('text-slate-400'); });
-            document.getElementById('tab-' + t).classList.remove('hidden'); document.getElementById('tab-btn-' + t).classList.add('bg-gold-dim', 'text-gold-400'); document.getElementById('tab-btn-' + t).classList.remove('text-slate-400');
+            ['week', 'month', 'list', 'locations'].forEach(x => {
+                document.getElementById('tab-' + x).classList.add('hidden');
+                document.getElementById('tab-btn-' + x).classList.remove('bg-gold-dim', 'text-gold-400');
+                document.getElementById('tab-btn-' + x).classList.add('text-slate-400');
+            });
+            document.getElementById('tab-' + t).classList.remove('hidden');
+            document.getElementById('tab-btn-' + t).classList.add('bg-gold-dim', 'text-gold-400');
+            document.getElementById('tab-btn-' + t).classList.remove('text-slate-400');
+            if (t === 'week') renderWeek();
+            if (t === 'month') renderMonthCal();
+            if (t === 'list') renderList();
+            if (t === 'locations') renderLocations();
+            lucide.createIcons();
         };
 
         function getActsForDate(dateStr) {
@@ -1543,26 +1727,105 @@
         }
 
         function renderWeek() {
-            const now = new Date(); const start = new Date(now); const d = now.getDay(); start.setDate(now.getDate() + (d === 0 ? -6 : 1 - d) + (window.currentWeekOffset * 7)); start.setHours(0, 0, 0, 0);
+            const now = new Date();
+            const start = new Date(now);
+            const d = now.getDay();
+            start.setDate(now.getDate() + (d === 0 ? -6 : 1 - d) + (window.currentWeekOffset * 7));
+            start.setHours(0, 0, 0, 0);
             const days = Array.from({ length: 7 }, (_, i) => { const x = new Date(start); x.setDate(x.getDate() + i); return x; });
-            document.getElementById('week-label').innerText = `${days[0].toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })} - ${days[6].toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' })}`;
+            document.getElementById('week-label').innerText = `${days[0].toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })} — ${days[6].toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' })}`;
 
-            let html = `<div class="timeline-grid"><div class="tl-header border-r border-white/5">Heure</div>`;
-            days.forEach(day => { const isT = day.toDateString() === new Date().toDateString(); html += `<div class="tl-header ${isT ? 'text-gold-400 bg-gold-500/10' : ''}">${DAYS_FR[day.getDay()]} ${day.getDate()}</div>`; });
+            const HOUR_START = 7, HOUR_END = 23, HOUR_H = 60;
+            const totalHours = HOUR_END - HOUR_START;
 
-            const hours = Array.from({ length: 14 }, (_, i) => ('0' + (i + 7)).slice(-2) + ':00');
-            hours.forEach(h => {
-                html += `<div class="tl-time">${h}</div>`;
-                days.forEach(day => {
-                    const dStr = day.toISOString().split('T')[0];
-                    const acts = getActsForDate(dStr).filter(a => a.start.slice(0, 2) === h.slice(0, 2));
-                    html += `<div class="tl-slot">${acts.map(a => `<div onclick="window.editActivity('${a.id}')" class="text-[0.65rem] p-1 mb-1 rounded cursor-pointer truncate border-l-2" style="background-color:${a.color}20; border-color:${a.color}; color:${a.color}">${a.start} ${a.nom}</div>`).join('')}</div>`;
-                });
+            // Header row
+            let html = `<div class="agenda-grid">`;
+            html += `<div class="agenda-day-header" style="border-right:1px solid rgba(255,255,255,0.04)"><span class="text-[0.55rem] text-slate-600 uppercase">UTC</span></div>`;
+            days.forEach(day => {
+                const isT = day.toDateString() === new Date().toDateString();
+                const dayName = DAYS_FR[day.getDay()];
+                html += `<div class="agenda-day-header ${isT ? 'today text-gold-400' : 'text-slate-400'}">
+                    <div class="text-[0.65rem] uppercase tracking-wide mb-1">${dayName}</div>
+                    <div class="day-num ${isT ? '' : 'text-white'} mx-auto">${day.getDate()}</div>
+                </div>`;
             });
-            html += `</div>`;
+
+            // Time labels col + day columns (all together in one grid row continuation)
+            const timeCol = Array.from({ length: totalHours }, (_, i) => {
+                const h = HOUR_START + i;
+                return `<div class="agenda-hour-label">${String(h).padStart(2,'0')}:00</div>`;
+            }).join('');
+
+            html += `<div style="display:contents">`;
+            // Time labels
+            html += `<div style="position:relative">${Array.from({length:totalHours},(_,i)=>`<div class="agenda-hour-label">${String(HOUR_START+i).padStart(2,'0')}:00</div>`).join('')}</div>`;
+
+            days.forEach(day => {
+                const dateStr = day.toISOString().split('T')[0];
+                const dayName = DAYS_FR[day.getDay()];
+                const acts = getActsForDate(dateStr);
+
+                let eventsHtml = '';
+                // Hour lines
+                for (let h = 0; h < totalHours; h++) {
+                    eventsHtml += `<div class="agenda-hour-line" style="top:${h * HOUR_H}px"></div>`;
+                }
+                // Current time line
+                if (day.toDateString() === now.toDateString()) {
+                    const mins = (now.getHours() - HOUR_START) * 60 + now.getMinutes();
+                    if (mins >= 0 && mins <= totalHours * 60) {
+                        eventsHtml += `<div class="agenda-now-line" style="top:${(mins / 60) * HOUR_H}px"></div>`;
+                    }
+                }
+                // Events
+                acts.forEach(a => {
+                    const [sh, sm] = a.start.split(':').map(Number);
+                    const [eh, em] = a.end.split(':').map(Number);
+                    const top = ((sh - HOUR_START) * 60 + sm) / 60 * HOUR_H;
+                    const durationMins = (eh * 60 + em) - (sh * 60 + sm);
+                    const height = Math.max(durationMins / 60 * HOUR_H - 2, 20);
+                    const bg = a.color + '22';
+                    eventsHtml += `<div class="agenda-event" style="top:${top}px;height:${height}px;background:${bg};border-color:${a.color};color:${a.color}" onclick="window.viewActivity('${a.id}')">
+                        <div class="evt-title">${a.nom}</div>
+                        <div class="evt-time">${a.start} – ${a.end}</div>
+                    </div>`;
+                });
+
+                html += `<div class="agenda-day-col" style="height:${totalHours * HOUR_H}px">${eventsHtml}</div>`;
+            });
+            html += `</div></div>`;
             document.getElementById('week-timeline').innerHTML = html;
         }
-        window.changeWeek = (d) => { window.currentWeekOffset += d; renderWeek(); }; window.goToCurrentWeek = () => { window.currentWeekOffset = 0; renderWeek(); };
+        window.changeWeek = (d) => { window.currentWeekOffset += d; renderWeek(); };
+        window.goToCurrentWeek = () => { window.currentWeekOffset = 0; renderWeek(); };
+
+        // View Activity modal
+        window.viewActivity = (id) => {
+            const a = window.state.activities.find(x => x.id === id); if (!a) return;
+            const r = a.resp ? window.state.responsables.find(x => x.id === a.resp) : null;
+            document.getElementById('va-color-bar').style.background = a.color || '#c9a84c';
+            document.getElementById('va-title').innerText = a.nom;
+            const recLabel = { once: 'Ponctuel', weekly: `Tous les ${(a.days||[]).join(', ')}`, monthly: 'Mensuel' };
+            document.getElementById('va-time').innerText = `${a.start} – ${a.end}${a.date ? ' · ' + new Date(a.date).toLocaleDateString('fr-FR') : ''}`;
+            document.getElementById('va-recurrence').innerText = recLabel[a.recurrence] || '';
+            const descRow = document.getElementById('va-desc-row');
+            descRow.style.display = a.desc ? 'flex' : 'none';
+            document.getElementById('va-desc').innerText = a.desc || '';
+            const respRow = document.getElementById('va-resp-row');
+            if (r) {
+                respRow.style.display = 'flex';
+                const av = document.getElementById('va-resp-avatar');
+                av.innerHTML = r.photo ? `<img src="${r.photo}" class="w-full h-full object-cover">` : `${r.prenom[0]}${r.nom[0]}`;
+                document.getElementById('va-resp-name').innerText = r.prenom + ' ' + r.nom;
+                document.getElementById('va-resp-equipe').innerText = r.equipe || '';
+                respRow.onclick = () => { window.closeModal('modal-view-activity'); window.viewResp(r.id); };
+            } else { respRow.style.display = 'none'; }
+            document.getElementById('va-edit-btn').onclick = () => { window.closeModal('modal-view-activity'); window.editActivity(id); };
+            document.getElementById('va-del-btn').onclick = () => { if (confirm('Supprimer cette activité ?')) { window.delActivity(id); window.closeModal('modal-view-activity'); } };
+            document.getElementById('modal-view-activity').classList.remove('hidden');
+            document.getElementById('modal-view-activity').classList.add('flex');
+            lucide.createIcons();
+        };
 
         function renderMonthCal() {
             const now = new Date(); const y = now.getFullYear(); const m = now.getMonth() + window.currentMonthOffset;
@@ -1607,11 +1870,14 @@
         }
         function actRow(a) {
             const r = window.state.responsables.find(x => x.id === a.resp);
-            return `<div class="bg-navy-800/80 rounded-xl p-3 border-l-4 flex items-center gap-4" style="border-color:${a.color || '#c9a84c'}">
-      <div class="font-mono text-gold-400 text-sm w-24 shrink-0">${a.start} - ${a.end}</div>
+            return `<div class="bg-navy-800/80 rounded-xl p-3 border-l-4 flex items-center gap-4 cursor-pointer hover:bg-navy-700/80 transition-colors" style="border-color:${a.color || '#c9a84c'}" onclick="window.viewActivity('${a.id}')">
+      <div class="font-mono text-gold-400 text-sm w-24 shrink-0">${a.start} – ${a.end}</div>
       <div class="flex-1 min-w-0"><div class="font-medium text-white truncate">${a.nom} ${a.date ? `<span class="text-xs text-slate-400 font-normal ml-2">(${new Date(a.date).toLocaleDateString()})</span>` : ''}</div><div class="text-xs text-slate-400 truncate">${a.desc || ''}</div></div>
-      ${r ? `<div class="hidden md:block px-2 py-1 rounded bg-white/5 text-xs text-slate-300 border border-white/10 shrink-0"><i data-lucide="user" class="w-3 h-3 inline mr-1"></i>${r.prenom}</div>` : ''}
-      <div class="flex gap-1 shrink-0"><button onclick="window.editActivity('${a.id}')" class="p-1.5 text-slate-400 hover:text-white"><i data-lucide="pencil" class="w-4 h-4"></i></button><button onclick="window.delActivity('${a.id}')" class="p-1.5 text-red-400 hover:text-white"><i data-lucide="trash" class="w-4 h-4"></i></button></div>
+      ${r ? `<div class="hidden md:block px-2 py-1 rounded bg-white/5 text-xs text-slate-300 border border-white/10 shrink-0 cursor-pointer hover:border-gold-border" onclick="event.stopPropagation();window.viewResp('${r.id}')"><i data-lucide="user" class="w-3 h-3 inline mr-1"></i>${r.prenom}</div>` : ''}
+      <div class="flex gap-1 shrink-0" onclick="event.stopPropagation()">
+        <button onclick="window.editActivity('${a.id}')" class="p-1.5 text-slate-400 hover:text-white hover:bg-white/10 rounded"><i data-lucide="pencil" class="w-4 h-4"></i></button>
+        <button onclick="window.delActivity('${a.id}')" class="p-1.5 text-red-400 hover:bg-red-500/20 rounded"><i data-lucide="trash" class="w-4 h-4"></i></button>
+      </div>
     </div>`;
         }
 
@@ -1681,6 +1947,133 @@
             }).join('');
         }
 
+        // LOCATIONS
+        window.handleLocPhoto = (input) => compressAndStore(input, 'loc-photo-preview', 'loc-photo-data', 'circle');
+
+        window.openModal_location = () => {
+            document.getElementById('modal-loc-title').innerHTML = '<i data-lucide="building-2" class="w-5 h-5 inline mr-2"></i>Nouvelle location';
+            document.getElementById('loc-edit-id').value = '';
+            ['loc-prenom','loc-nom','loc-tel','loc-email','loc-objet','loc-reglement','loc-note','loc-photo-data'].forEach(f => document.getElementById(f).value = '');
+            document.getElementById('loc-date').value = new Date().toISOString().split('T')[0];
+            document.getElementById('loc-recurrence').value = 'once';
+            document.getElementById('loc-photo-preview').innerHTML = '<i data-lucide="camera" class="w-7 h-7"></i><input type="file" id="loc-photo-input" accept="image/*" class="hidden" onchange="window.handleLocPhoto(this)">';
+        };
+
+        window.saveLocation = async () => {
+            const prenom = document.getElementById('loc-prenom').value.trim();
+            const nom = document.getElementById('loc-nom').value.trim();
+            const objet = document.getElementById('loc-objet').value.trim();
+            const date = document.getElementById('loc-date').value;
+            const start = document.getElementById('loc-start').value;
+            const end = document.getElementById('loc-end').value;
+            if (!prenom || !nom || !objet || !date || !start || !end) return window.toast('Champs obligatoires manquants', 'error');
+            const id = document.getElementById('loc-edit-id').value || window.uid();
+            await dbSet('locations', id, {
+                id, prenom, nom, objet, date,
+                recurrence: document.getElementById('loc-recurrence').value,
+                start, end,
+                tel: document.getElementById('loc-tel').value,
+                email: document.getElementById('loc-email').value,
+                reglement: document.getElementById('loc-reglement').value,
+                note: document.getElementById('loc-note').value,
+                photo: document.getElementById('loc-photo-data').value || null,
+                createdAt: new Date().toISOString()
+            });
+            window.closeModal('modal-location');
+            window.toast('Location enregistrée ✓');
+            addLog(`🏛 Location : ${prenom} ${nom} — ${objet}`);
+        };
+
+        window.editLocation = (id) => {
+            const l = window.state.locations.find(x => x.id === id); if (!l) return;
+            document.getElementById('modal-loc-title').innerHTML = '<i data-lucide="building-2" class="w-5 h-5 inline mr-2"></i>Modifier la location';
+            document.getElementById('loc-edit-id').value = id;
+            document.getElementById('loc-prenom').value = l.prenom || '';
+            document.getElementById('loc-nom').value = l.nom || '';
+            document.getElementById('loc-tel').value = l.tel || '';
+            document.getElementById('loc-email').value = l.email || '';
+            document.getElementById('loc-objet').value = l.objet || '';
+            document.getElementById('loc-date').value = l.date || '';
+            document.getElementById('loc-recurrence').value = l.recurrence || 'once';
+            document.getElementById('loc-start').value = l.start || '';
+            document.getElementById('loc-end').value = l.end || '';
+            document.getElementById('loc-reglement').value = l.reglement || '';
+            document.getElementById('loc-note').value = l.note || '';
+            document.getElementById('loc-photo-data').value = l.photo || '';
+            const pp = document.getElementById('loc-photo-preview');
+            if (l.photo) {
+                pp.innerHTML = `<img src="${l.photo}" class="w-full h-full object-cover rounded-full"><input type="file" id="loc-photo-input" accept="image/*" class="hidden" onchange="window.handleLocPhoto(this)">`;
+            } else {
+                pp.innerHTML = '<i data-lucide="camera" class="w-7 h-7"></i><input type="file" id="loc-photo-input" accept="image/*" class="hidden" onchange="window.handleLocPhoto(this)">';
+            }
+            document.getElementById('modal-location').classList.remove('hidden');
+            document.getElementById('modal-location').classList.add('flex');
+            lucide.createIcons();
+        };
+
+        window.delLocation = (id) => { if (confirm('Supprimer cette location ?')) { dbDel('locations', id); window.toast('Location supprimée'); } };
+
+        window.viewLocation = (id) => {
+            const l = window.state.locations.find(x => x.id === id); if (!l) return;
+            const av = document.getElementById('vloc-avatar');
+            av.innerHTML = l.photo ? `<img src="${l.photo}" class="w-full h-full object-cover">` : `${l.prenom[0]}${l.nom[0]}`;
+            document.getElementById('vloc-name').innerText = l.prenom + ' ' + l.nom;
+            document.getElementById('vloc-objet').innerText = l.objet;
+            document.getElementById('vloc-date').innerText = new Date(l.date).toLocaleDateString('fr-FR', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+            document.getElementById('vloc-time').innerText = l.start + ' – ' + l.end;
+            const wa = document.getElementById('vloc-wa');
+            const em = document.getElementById('vloc-email');
+            wa.href = l.tel ? `https://wa.me/${l.tel.replace(/\D/g,'')}` : '#';
+            wa.style.opacity = l.tel ? '1' : '0.4'; wa.style.pointerEvents = l.tel ? '' : 'none';
+            em.href = l.email ? `mailto:${l.email}` : '#';
+            em.style.opacity = l.email ? '1' : '0.4'; em.style.pointerEvents = l.email ? '' : 'none';
+            const rs = document.getElementById('vloc-reglement-section');
+            if (l.reglement) { rs.classList.remove('hidden'); document.getElementById('vloc-reglement').innerText = l.reglement; } else { rs.classList.add('hidden'); }
+            document.getElementById('vloc-edit-btn').onclick = () => { window.closeModal('modal-view-location'); window.editLocation(id); };
+            document.getElementById('vloc-del-btn').onclick = () => { if (confirm('Supprimer ?')) { window.delLocation(id); window.closeModal('modal-view-location'); } };
+            document.getElementById('modal-view-location').classList.remove('hidden');
+            document.getElementById('modal-view-location').classList.add('flex');
+            lucide.createIcons();
+        };
+
+        function renderLocations() {
+            const el = document.getElementById('locations-list');
+            if (!el) return;
+            const list = window.state.locations;
+            if (!list.length) { el.innerHTML = '<div class="text-center py-10 text-slate-500"><i data-lucide="building-2" class="w-8 h-8 mx-auto mb-2 opacity-40"></i>Aucune location enregistrée</div>'; return; }
+            const recurLabel = { once: '', weekly: '🔁 Hebdo', monthly: '🔁 Mensuel' };
+            el.innerHTML = list.map(l => `
+                <div class="flex items-center gap-4 p-4 rounded-xl hover:bg-white/3 transition-colors group cursor-pointer" onclick="window.viewLocation('${l.id}')">
+                    <div class="w-11 h-11 rounded-full bg-navy-800 border border-gold-border overflow-hidden flex items-center justify-center text-gold-400 font-bold shrink-0">
+                        ${l.photo ? `<img src="${l.photo}" class="w-full h-full object-cover">` : `${l.prenom[0]}${l.nom[0]}`}
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="font-medium text-white group-hover:text-gold-400 transition-colors">${l.prenom} ${l.nom}</div>
+                        <div class="text-sm text-gold-400">${l.objet}</div>
+                        <div class="text-xs text-slate-400 font-mono">${new Date(l.date).toLocaleDateString('fr-FR')} · ${l.start}–${l.end} ${recurLabel[l.recurrence] || ''}</div>
+                    </div>
+                    <div class="flex gap-1 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                        ${l.tel ? `<a href="https://wa.me/${l.tel.replace(/\D/g,'')}" target="_blank" onclick="event.stopPropagation()" class="p-1.5 text-[#25D366] hover:bg-[#25D366]/20 rounded-md"><i data-lucide="message-circle" class="w-4 h-4"></i></a>` : ''}
+                        ${l.email ? `<a href="mailto:${l.email}" onclick="event.stopPropagation()" class="p-1.5 text-blue-400 hover:bg-blue-500/20 rounded-md"><i data-lucide="mail" class="w-4 h-4"></i></a>` : ''}
+                        <button onclick="event.stopPropagation();window.editLocation('${l.id}')" class="p-1.5 text-slate-400 hover:text-white hover:bg-white/10 rounded-md"><i data-lucide="pencil" class="w-4 h-4"></i></button>
+                        <button onclick="event.stopPropagation();window.delLocation('${l.id}')" class="p-1.5 text-red-400 hover:bg-red-500/20 rounded-md"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                    </div>
+                </div>`).join('');
+        }
+
+        // Fix openModal for location
+        const _origOpenModal = window.openModal;
+        window.openModal = (id) => {
+            if (id === 'modal-location') {
+                window.openModal_location();
+                document.getElementById('modal-location').classList.remove('hidden');
+                document.getElementById('modal-location').classList.add('flex');
+                lucide.createIcons();
+                return;
+            }
+            _origOpenModal(id);
+        };
+
         // ACCES
         window.saveAcces = async () => {
             const id = window.uid(), d = document.getElementById('acces-date').value, h = document.getElementById('acces-heure').value, veh = document.getElementById('acces-veh').value, type = document.getElementById('acces-type').value, port = document.getElementById('acces-portail').value, note = document.getElementById('acces-note').value;
@@ -1713,9 +2106,35 @@
         }
 
         // CODES
-        window.generateCode = (type) => applyCode(type, String(Math.floor(1000 + Math.random() * 9000)));
-        window.openSetCode = (type) => { document.getElementById('set-code-target').value = type; document.getElementById('set-code-input').value = ''; window.openModal('modal-set-code'); };
-        window.applySetCode = () => { const c = document.getElementById('set-code-input').value, t = document.getElementById('set-code-target').value; if (c.length !== 4) return window.toast('4 chiffres requis', 'error'); applyCode(t, c); window.closeModal('modal-set-code'); };
+        window.generateCode = (type) => {
+            const code = type === 'portillon'
+                ? String(Math.floor(100000 + Math.random() * 900000)) + '#'
+                : String(Math.floor(1000 + Math.random() * 9000));
+            applyCode(type, code);
+        };
+        window.openSetCode = (type) => {
+            document.getElementById('set-code-target').value = type;
+            document.getElementById('set-code-input').value = '';
+            const hint = document.getElementById('set-code-hint');
+            if (type === 'portillon') {
+                hint.innerText = '6 chiffres — le # sera ajouté automatiquement';
+                document.getElementById('set-code-input').maxLength = 6;
+            } else {
+                hint.innerText = '4 chiffres';
+                document.getElementById('set-code-input').maxLength = 4;
+            }
+            document.getElementById('set-code-title').innerText = 'Nouveau code — ' + (type === 'portillon' ? 'Portillon' : 'Grand Portail');
+            window.openModal('modal-set-code');
+        };
+        window.applySetCode = () => {
+            const c = document.getElementById('set-code-input').value;
+            const t = document.getElementById('set-code-target').value;
+            if (t === 'portillon' && c.length !== 6) return window.toast('6 chiffres requis pour le portillon', 'error');
+            if (t === 'portail' && c.length !== 4) return window.toast('4 chiffres requis', 'error');
+            const finalCode = t === 'portillon' ? c + '#' : c;
+            applyCode(t, finalCode);
+            window.closeModal('modal-set-code');
+        };
 
         async function applyCode(type, code) {
             const d = new Date().toISOString();
